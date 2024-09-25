@@ -22,7 +22,7 @@ const Orders = () => {
   return (
     <div className="container">
         <div className="section">
-        <h2>Orders</h2>
+        <h2>Pedidos</h2>
         <ul>
             <li className="header">
             <span>ID</span>

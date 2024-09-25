@@ -21,7 +21,7 @@ const Players = () => {
   return (
     <div className="container">
         <div className="section">
-        <h2>Players</h2>
+        <h2>Jugadores</h2>
         <ul>
             <li className="header">
             <span>Imagen</span>

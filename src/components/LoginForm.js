@@ -18,6 +18,7 @@ const LoginForm = () => {
 
       const response = await axios.post('https://vikingsdb.up.railway.app/token', params);
       localStorage.setItem('token', response.data.access_token);
+      localStorage.setItem('userName', username);
       console.log('Inicio de sesión exitoso', response.data);
       navigate('/status', { state: { isLoggedIn: true } });
     } catch (error) {
