@@ -7,9 +7,9 @@ const Home = () => {
     <div className="home-container">
       <h1>Bienvenido a la API de Vikings</h1>
       <p>Elige una opción:</p>
-      <Link to="/login">Login</Link>
+      <Link to="/login">Iniciar Sesión</Link>
       <br />
-      <Link to="/register">Register</Link>
+      <Link to="/register">Registrarse</Link>
     </div>
   );
 };

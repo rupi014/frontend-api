@@ -67,7 +67,7 @@ const Status = () => {
           ))}
         </ul>
       </div>
-      <div className="section">
+      <div className="section products">
         <h2>Products</h2>
         <ul>
           {data.products.map((product) => (
@@ -82,11 +82,16 @@ const Status = () => {
           ))}
         </ul>
       </div>
-      <div className="section">
+      <div className="section blogs">
         <h2>Blogs</h2>
         <ul>
           {data.blogs.map((blog) => (
-            <li key={blog.id}>{blog.title}</li>
+            <li key={blog.id}>
+              <span>{blog.title}</span>
+              <span>{blog.content}</span>
+              <span>{blog.date}</span>
+              <span>{blog.author}</span>
+            </li>
           ))}
         </ul>
       </div>
