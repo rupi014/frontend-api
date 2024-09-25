@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './LoginForm.scss';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // Estado para el mensaje de error
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -19,23 +21,45 @@ const LoginForm = () => {
       console.log('Inicio de sesión exitoso', response.data);
       navigate('/status', { state: { isLoggedIn: true } });
     } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          setErrorMessage('Usuario/contraseña incorrecto'); // Error de autenticación
+        } else {
+          setErrorMessage('No fue posible conectar al servidor'); // Otro error del servidor
+        }
+      } else {
+        setErrorMessage('No fue posible conectar al servidor'); // Error de red u otro problema
+      }
       console.error('Error al iniciar sesión', error.response ? error.response.data : error);
-      navigate('/status', { state: { isLoggedIn: false } });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Usuario:</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-      </div>
-      <div>
-        <label>Contraseña:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </div>
-      <button type="submit">Iniciar Sesión</button>
-    </form>
+    <div className="login-container">
+      <form onSubmit={handleSubmit}>
+        <h2>Iniciar Sesión</h2>
+        <div>
+          <label>Usuario:</label>
+          <input 
+            type="text" 
+            value={username} 
+            onChange={(e) => setUsername(e.target.value)} 
+            autoComplete="username" // Agrega el atributo autocomplete
+          />
+        </div>
+        <div>
+          <label>Contraseña:</label>
+          <input 
+            type="password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            autoComplete="current-password" // Agrega el atributo autocomplete
+          />
+        </div> 
+        <button type="submit">Iniciar Sesión</button>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+      </form>
+    </div>
   );
 };
 

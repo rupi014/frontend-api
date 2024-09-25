@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './status.scss';
 
 const Status = () => {
-  const location = useLocation();
-  const { isLoggedIn } = location.state || { isLoggedIn: false };
 
   const [data, setData] = useState({
     staff: [],
@@ -40,7 +37,7 @@ const Status = () => {
 
   return (
     <div className="container">
-      <h1>{isLoggedIn ? 'Logged' : 'Not Logged'}</h1>
+      <h1>API de Vikings</h1>
       <div className="section">
         <h2>Staff</h2>
         <ul>
@@ -60,7 +57,13 @@ const Status = () => {
         <h2>Players</h2>
         <ul>
           {data.players.map((player) => (
-            <li key={player.id}>{player.name}</li>
+            <li key={player.id}>
+              <span>{player.image}</span>
+              <span>{player.name}</span>
+              <span>{player.role}</span>
+              <span>{player.bio}</span>
+              <span>{player.twitter}</span>
+            </li>
           ))}
         </ul>
       </div>
@@ -68,7 +71,14 @@ const Status = () => {
         <h2>Products</h2>
         <ul>
           {data.products.map((product) => (
-            <li key={product.id}>{product.name}</li>
+            <li key={product.id}>
+              <span>{product.image}</span>
+              <span>{product.name}</span>
+              <span>{product.description}</span>
+              <span>{product.price}</span>
+              <span>{product.category}</span>
+              <span>{product.stock}</span>
+            </li>
           ))}
         </ul>
       </div>

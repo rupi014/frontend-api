@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import './RegisterForm.scss'; // Importa la hoja de estilos SCSS
 
 const RegisterForm = () => {
   const [username, setUsername] = useState('');
@@ -7,21 +9,20 @@ const RegisterForm = () => {
   const [email, setEmail] = useState('');
   const [telephone, setTelephone] = useState('');
   const [address, setAddress] = useState('');
-  const [role, setRole] = useState('');
+  const navigate = useNavigate(); // Usa useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post('https://vikingsdb.up.railway.app/register', {
+      const response = await axios.post('https://vikingsdb.up.railway.app/register', {
         username,
         email,
         password,
         telephone,
         address,
-        role,
-
       });
       console.log('Registro exitoso', response.data);
+      navigate('/login'); // Redirige a la página de login
     } catch (error) {
       if (error.response) {
         console.error('Error al registrar', error.response.data);
@@ -32,33 +33,32 @@ const RegisterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Usuario:</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-      </div>
-      <div>
-        <label>Contraseña:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </div>
-      <div>
-        <label>Email:</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      </div>
-      <div>
-        <label>Teléfono:</label>
-        <input type="text" value={telephone} onChange={(e) => setTelephone(e.target.value)} />
-      </div>
-      <div>
-        <label>Dirección:</label>
-        <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
-      </div>
-      <div>
-        <label>Rol:</label>
-        <input type="text" value={role} onChange={(e) => setRole(e.target.value)} />
-      </div>
-      <button type="submit">Registrar</button>
-    </form>
+    <div className="register-container">
+      <form onSubmit={handleSubmit} className="register-form"> 
+        <h2>Registro</h2> 
+        <div>
+          <label>Usuario:</label>
+          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} autocomplete="username" />
+        </div>
+        <div>
+          <label>Contraseña:</label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autocomplete="new-password" />
+        </div>
+        <div>
+          <label>Email:</label>
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autocomplete="email" />
+        </div>
+        <div>
+          <label>Teléfono:</label>
+          <input type="text" value={telephone} onChange={(e) => setTelephone(e.target.value)} autocomplete="tel" />
+        </div>
+        <div>
+          <label>Dirección:</label>
+          <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} autocomplete="street-address" />
+        </div>
+        <button type="submit">Registrar</button>
+      </form>
+    </div>
   );
 };
 
