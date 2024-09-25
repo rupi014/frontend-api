@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './section_style.scss';
 
 
 const Staff = () => {
@@ -18,10 +19,18 @@ const Staff = () => {
     fetchStaff();
   }, []);
 
-  return (
+  return (  
+    <div className="container">
     <div className="section">
       <h2>Staff</h2>
       <ul>
+        <li className="header">
+          <span>Nombre</span>
+          <span>Rol</span>
+          <span>Biografía</span>
+          <span>Imagen</span>
+          <span>Twitter</span>
+        </li>
         {staff.map((member) => (
           <li key={member.id}>
             <span>{member.name}</span>
@@ -32,6 +41,7 @@ const Staff = () => {
           </li>
         ))}
       </ul>
+    </div>
     </div>
   );
 };

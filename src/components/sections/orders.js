@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './section_style.scss';
 
 
 const Orders = () => {
@@ -19,28 +20,30 @@ const Orders = () => {
   }, []);
 
   return (
-    <div className="section">
-      <h2>Orders</h2>
-      <ul>
-        <li className="header">
-          <span>ID</span>
-          <span>Cliente</span>
-          <span>Producto</span>
-          <span>Cantidad</span>
-          <span>Precio Total</span>
-          <span>Fecha</span>
-        </li>
-        {orders.map((order) => (
-          <li key={order.id}>
-            <span>{order.id}</span>
-            <span>{order.customer}</span>
-            <span>{order.product}</span>
-            <span>{order.quantity}</span>
-            <span>{order.totalPrice}</span>
-            <span>{order.date}</span>
-          </li>
-        ))}
-      </ul>
+    <div className="container">
+        <div className="section">
+        <h2>Orders</h2>
+        <ul>
+            <li className="header">
+            <span>ID</span>
+            <span>Cliente</span>
+            <span>Producto</span>
+            <span>Cantidad</span>
+            <span>Precio Total</span>
+            <span>Fecha</span>
+            </li>
+            {orders.map((order) => (
+            <li key={order.id}>
+                <span>{order.id}</span>
+                <span>{order.customer}</span>
+                <span>{order.product}</span>
+                <span>{order.quantity}</span>
+                <span>{order.totalPrice}</span>
+                <span>{order.date}</span>
+            </li>
+            ))}
+        </ul>
+        </div>
     </div>
   );
 };
