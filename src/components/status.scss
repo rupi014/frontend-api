@@ -1,53 +1,79 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px;
-    padding: 20px; 
-    height: 100vh; 
-  }
-  
-  h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
-    text-align: center; 
-  }
-  
-  .section {
-    width: 80%;
-    margin-bottom: 20px;
-  }
-  
-  .section h2 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-    text-align: left; 
-  }
-  
-  .section ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .section li {
-    background-color: #f9f9f9;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); 
-    gap: 10px; 
-  }
-  
-  .section li:nth-child(even) {
-    background-color: #e9e9e9;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  padding: 20px;
+  height: 100vh;
+}
 
-  .section.products li {
-    grid-template-columns: repeat(6, 1fr); 
-  }
+h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  text-align: center;
+}
 
-  .section.blogs li {
-    grid-template-columns: repeat(4, 1fr); 
-  }
+.navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.button {
+  display: block;
+  width: 200px;
+  padding: 15px;
+  text-align: center;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1.2em;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.section {
+  width: 80%;
+  margin-bottom: 20px;
+}
+
+.section h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.section ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.section li {
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.section li:nth-child(even) {
+  background-color: #e9e9e9;
+}
+
+.section.products li {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.section.blogs li {
+  grid-template-columns: repeat(4, 1fr);
+}
