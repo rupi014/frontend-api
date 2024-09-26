@@ -74,6 +74,11 @@ const Products = () => {
     setNewProduct({ ...newProduct, [name]: value });
   };
 
+  const truncateDescription = (description) => {
+    const words = description.split(' ');
+    return words.length > 4 ? words.slice(0, 5).join(' ') + '...' : description;
+  };
+
   return (
     <div className="container">
         <div className="section">
@@ -92,7 +97,7 @@ const Products = () => {
             <li key={product.id}>
                 <span>{product.image}</span>
                 <span>{product.name}</span>
-                <span>{product.description}</span>
+                <span>{truncateDescription(product.description)}</span>
                 <span>{product.price}</span>
                 <span>{product.category}</span>
                 <span>{product.stock}</span>

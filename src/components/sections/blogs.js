@@ -78,6 +78,11 @@ const Blogs = () => {
     setNewBlog({ ...newBlog, [name]: value });
   };
 
+  const truncateContent = (content) => {
+    const words = content.split(' ');
+    return words.length > 5 ? words.slice(0, 5).join(' ') + '...' : content;
+  };
+
   return (
     <div className="container">
         <div className="section">
@@ -93,7 +98,7 @@ const Blogs = () => {
             {blogs.map((blog) => (
             <li key={blog.id}>
                 <span>{blog.title}</span>
-                <span>{blog.content}</span>
+                <span>{truncateContent(blog.content)}</span>
                 <span>{blog.date.split('T')[0]}</span>
                 <span>{blog.author_id}</span>
                 <span>
