@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
-import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { deleteOrder } from '../functions/delete_functions';
 import { addOrder } from '../functions/create_functions';
 import './section_style.scss';
@@ -60,11 +58,7 @@ const Orders = () => {
   return (
     <div className="container">
         <div className="section">
-        <h2>Pedidos 
-          <button className="icon-button">
-            <FontAwesomeIcon icon={faSquarePlus} />
-          </button>
-        </h2>
+        <h2>Pedidos</h2>
         <ul>
             <li className="header">
             <span>ID</span>

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './section_style.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
-import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { deleteBlog } from '../functions/delete_functions';
 import { addBlog } from '../functions/create_functions';
 
@@ -55,11 +53,7 @@ const Blogs = () => {
   return (
     <div className="container">
         <div className="section">
-        <h2>Blogs 
-          <button className="icon-button">
-            <FontAwesomeIcon icon={faSquarePlus} />
-          </button>
-        </h2>
+        <h2>Blogs</h2>
         <ul>
             <li className="header">
             <span>Título</span>
