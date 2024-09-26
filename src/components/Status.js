@@ -15,13 +15,13 @@ const Status = () => {
   return (
     <div className="container">
       <h1>API de Vikings</h1>
-      <h2>Hola {userName}</h2>
+      <h2>Bienvenido {userName}.</h2>
       <div className="navigation">
-        <Link to="/sections/staff" className="button">Staff</Link>
-        <Link to="/sections/players" className="button">Jugadores</Link>
-        <Link to="/sections/products" className="button">Productos</Link>
-        <Link to="/sections/orders" className="button">Pedidos</Link>
-        <Link to="/sections/blogs" className="button">Blogs</Link>
+        <Link to="/sections/staff" className="button">STAFF</Link>
+        <Link to="/sections/players" className="button">JUGADORES</Link>
+        <Link to="/sections/products" className="button">PRODUCTOS</Link>
+        <Link to="/sections/orders" className="button">PEDIDOS</Link>
+        <Link to="/sections/blogs" className="button">BLOGS</Link>
       </div>
     </div>
   );
