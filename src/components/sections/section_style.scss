@@ -5,7 +5,10 @@
     padding: 20px;
     height: 100%;
     width: 100%;
-    box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
+    box-sizing: border-box;
+    background-image: url('../../assets/images/background.webp'); // Ruta relativa a Home.scss
+    background-size: cover;
+    background-position: center;
   }
   
   .section {
@@ -43,7 +46,7 @@
     font-weight: bold;
     background-color: #2f2e2e;
     color: #FFCA00;
-    border: none;
+    border: 1px solid #FFCA00;
     box-shadow: none;
     display: flex;
     justify-content: space-between;
@@ -55,6 +58,7 @@
     background-color: #f9f9f9;
     margin-bottom: 10px;
     padding: 10px;
+    border: 1px solid #2f2e2e;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -95,4 +99,56 @@
   .delete-button:hover {
     background-color: red;
     color: white;
+  }
+  
+  /* Media Queries */
+  @media (max-width: 768px) {
+    .section {
+        width: 90%;
+    }
+
+    .section h2 {
+        font-size: 1.5em;
+    }
+
+    .section .header {
+        display: none; // Oculta el header en pantallas de tablet y móviles
+    }
+
+    .section li {
+        flex-direction: column;
+        align-items: center; // Centra los elementos en modo tablet
+    }
+
+    .section li span {
+        text-align: center; // Centra el texto en modo tablet
+    }
+
+    .section li span button {
+        font-size: 0.9em;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .section {
+        width: 100%;
+    }
+
+    .section h2 {
+        font-size: 1.2em;
+    }
+
+    .section li {
+        padding: 8px;
+        align-items: center; // Centra los elementos en modo móvil
+    }
+
+    .section li span {
+        text-align: center; // Centra el texto en modo móvil
+    }
+
+    .section li span button {
+        font-size: 0.8em;
+        padding: 4px 8px;
+    }
   }
