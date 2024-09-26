@@ -15,7 +15,7 @@ const Status = () => {
   return (
     <div className="container-status">
       <h1>API de Vikings</h1>
-      <h2>Bienvenido {userName}.</h2>
+      <h2>Bienvenido/a {userName}.</h2>
       <div className="navigation">
         <Link to="/sections/staff" className="button">STAFF</Link>
         <Link to="/sections/players" className="button">JUGADORES</Link>
