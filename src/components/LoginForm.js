@@ -19,12 +19,12 @@ const LoginForm = () => {
       const response = await axios.post('https://vikingsdb.up.railway.app/token', params);
       localStorage.setItem('token', response.data.access_token);
       localStorage.setItem('userName', username);
-      console.log('Inicio de sesión exitoso', response.data);
+      console.log('Inicio de sesión exitoso');
       navigate('/status', { state: { isLoggedIn: true } });
     } catch (error) {
       if (error.response) {
         if (error.response.status === 401) {
-          setErrorMessage('Usuario/contraseña incorrecto'); // Error de autenticación
+          setErrorMessage('Usuario // Contraseña incorrecto'); // Error de autenticación
         } else {
           setErrorMessage('No fue posible conectar al servidor'); // Otro error del servidor
         }

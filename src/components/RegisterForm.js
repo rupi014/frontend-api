@@ -35,7 +35,7 @@ const RegisterForm = () => {
   return (
     <div className="register-container">
       <form onSubmit={handleSubmit} className="register-form"> 
-        <h2>Registro</h2> 
+        <h1>Registro</h1> 
         <div>
           <label>Usuario:</label>
           <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} autocomplete="username" />
