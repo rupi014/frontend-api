@@ -7,6 +7,7 @@ const getAuthToken = () => {
   return localStorage.getItem('token');
 };
 
+// Función para actualizar un jugador
 export const updatePlayer = async (id, updatedPlayer) => {
   try {
     const token = getAuthToken();
@@ -18,6 +19,70 @@ export const updatePlayer = async (id, updatedPlayer) => {
     return response.data;
   } catch (error) {
     console.error('Error updating player', error);
+    throw error;
+  }
+};
+
+// Función para actualizar un miembro del staff
+export const updateStaff = async (id, updatedStaff) => {
+  try {
+    const token = getAuthToken();
+    const response = await axios.put(`${API_URL}/staff/${id}`, updatedStaff, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating staff member', error);
+    throw error;
+  }
+};
+
+// Función para actualizar un producto
+export const updateProduct = async (id, updatedProduct) => {
+  try {
+    const token = getAuthToken();
+    const response = await axios.put(`${API_URL}/products/${id}`, updatedProduct, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating product', error);
+    throw error;
+  }
+};
+
+// Función para actualizar un pedido
+export const updateOrder = async (id, updatedOrder) => {
+  try {
+    const token = getAuthToken();
+    const response = await axios.put(`${API_URL}/orders/${id}`, updatedOrder, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating order', error);
+    throw error;
+  }
+};
+
+// Función para actualizar un blog
+export const updateBlog = async (id, updatedBlog) => {
+  try {
+    const token = getAuthToken();
+    const response = await axios.put(`${API_URL}/blog/${id}`, updatedBlog, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating blog', error);
     throw error;
   }
 };

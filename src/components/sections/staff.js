@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { deleteStaff } from '../functions/delete_functions';
-import { addStaff } from '../functions/create_functions';
+import { addStaff } from '../functions/create_functions'; 
+import { updateStaff } from '../functions/edit_functions';
 import './section_style.scss';
 
 const Staff = () => {
@@ -13,6 +14,7 @@ const Staff = () => {
     twitter: '',
     image: ''
   });
+  const [staffToEdit, setStaffToEdit] = useState(null);
 
   useEffect(() => {
     const fetchStaff = async () => {
@@ -30,7 +32,7 @@ const Staff = () => {
   const handleDelete = async (id) => {
     try {
       await deleteStaff(id);
-      setStaff(staff.filter(member => member.id !== id)); // Actualiza el estado para eliminar el miembro del staff
+      setStaff(staff.filter(member => member.id !== id));
     } catch (error) {
       console.error('Error deleting staff member', error);
     }
@@ -39,10 +41,29 @@ const Staff = () => {
   const handleAddStaff = async () => {
     try {
       const addedStaff = await addStaff(newStaff);
-      setStaff([...staff, addedStaff]); // Actualiza el estado para añadir el nuevo miembro del staff
-      setNewStaff({ name: '', role: '', bio: '', twitter: '', image: '' }); // Limpia el formulario
+      setStaff([...staff, addedStaff]);
+      setNewStaff({ name: '', role: '', bio: '', twitter: '', image: '' });
     } catch (error) {
       console.error('Error adding staff member', error);
+    }
+  };
+
+  const handleEditStaff = (member) => {
+    setStaffToEdit(member);
+    setNewStaff(member);
+  };
+
+  const handleUpdateStaff = async () => {
+    try {
+      const updatedStaff = await updateStaff(staffToEdit.id, newStaff);
+      setStaff(staff.map(member => (member.id === staffToEdit.id ? updatedStaff : member)));
+      setStaffToEdit(null);
+      setNewStaff({ name: '', role: '', bio: '', twitter: '', image: '' });
+      // Refrescar la lista de staff después de actualizar
+      const response = await axios.get('https://vikingsdb.up.railway.app/staff/');
+      setStaff(response.data);
+    } catch (error) {
+      console.error('Error updating staff member', error);
     }
   };
 
@@ -72,7 +93,7 @@ const Staff = () => {
                 <span>{member.twitter}</span>
                 <span>{member.image}</span>
                 <span>
-                    <button className='edit-button'>Editar</button>
+                    <button className='edit-button' onClick={() => handleEditStaff(member)}>Editar</button>
                     <button className='delete-button' onClick={() => handleDelete(member.id)}>Eliminar</button>
                 </span>
             </li>
@@ -80,7 +101,7 @@ const Staff = () => {
         </ul>
         </div>
         <div className="section">
-          <h2>Añadir Miembro del Staff</h2>
+          <h2>{staffToEdit ? 'Editar Miembro del Staff' : 'Añadir Miembro del Staff'}</h2>
           <form className="create-form">
             <label>Nombre:</label>
             <input type="text" name="name" value={newStaff.name} onChange={handleChange} />
@@ -92,7 +113,9 @@ const Staff = () => {
             <input type="text" name="twitter" value={newStaff.twitter} onChange={handleChange} />
             <label>Imagen:</label>
             <input type="text" name="image" value={newStaff.image} onChange={handleChange} />
-            <button type="button" onClick={handleAddStaff}>Crear</button>
+            <button type="button" onClick={staffToEdit ? handleUpdateStaff : handleAddStaff}>
+              {staffToEdit ? 'Actualizar' : 'Crear'}
+            </button>
           </form>
         </div>
     </div>

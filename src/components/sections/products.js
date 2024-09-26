@@ -3,6 +3,8 @@ import axios from 'axios';
 import './section_style.scss';
 import { deleteProduct } from '../functions/delete_functions';
 import { addProduct } from '../functions/create_functions';
+import { updateProduct } from '../functions/edit_functions';
+
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -14,6 +16,7 @@ const Products = () => {
     stock: '',
     image: ''
   });
+  const [productToEdit, setProductToEdit] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -31,7 +34,7 @@ const Products = () => {
   const handleDelete = async (id) => {
     try {
       await deleteProduct(id);
-      setProducts(products.filter(product => product.id !== id)); // Actualiza el estado para eliminar el producto
+      setProducts(products.filter(product => product.id !== id));
     } catch (error) {
       console.error('Error deleting product', error);
     }
@@ -40,10 +43,29 @@ const Products = () => {
   const handleAddProduct = async () => {
     try {
       const addedProduct = await addProduct(newProduct);
-      setProducts([...products, addedProduct]); // Actualiza el estado para añadir el nuevo producto
-      setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '' }); // Limpia el formulario
+      setProducts([...products, addedProduct]);
+      setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '' });
     } catch (error) {
       console.error('Error adding product', error);
+    }
+  };
+
+  const handleEditProduct = (product) => {
+    setProductToEdit(product);
+    setNewProduct(product);
+  };
+
+  const handleUpdateProduct = async () => {
+    try {
+      const updatedProduct = await updateProduct(productToEdit.id, newProduct);
+      setProducts(products.map(product => (product.id === productToEdit.id ? updatedProduct : product)));
+      setProductToEdit(null);
+      setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '' });
+      // Refrescar la lista de productos después de actualizar
+      const response = await axios.get('https://vikingsdb.up.railway.app/products/');
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Error updating product', error);
     }
   };
 
@@ -75,7 +97,7 @@ const Products = () => {
                 <span>{product.category}</span>
                 <span>{product.stock}</span>
                 <span>
-                    <button className='edit-button'>Editar</button>
+                    <button className='edit-button' onClick={() => handleEditProduct(product)}>Editar</button>
                     <button className='delete-button' onClick={() => handleDelete(product.id)}>Eliminar</button>
                 </span>
             </li>
@@ -83,7 +105,7 @@ const Products = () => {
         </ul>
         </div>
         <div className="section">
-          <h2>Añadir Producto</h2>
+          <h2>{productToEdit ? 'Editar Producto' : 'Añadir Producto'}</h2>
           <form className="create-form">
             <label>Nombre:</label>
             <input type="text" name="name" value={newProduct.name} onChange={handleChange} />
@@ -97,7 +119,9 @@ const Products = () => {
             <input type="number" name="stock" value={newProduct.stock} onChange={handleChange} />
             <label>Imagen:</label>
             <input type="text" name="image" value={newProduct.image} onChange={handleChange} />
-            <button type="button" onClick={handleAddProduct}>Crear</button>
+            <button type="button" onClick={productToEdit ? handleUpdateProduct : handleAddProduct}>
+              {productToEdit ? 'Actualizar' : 'Crear'}
+            </button>
           </form>
         </div>
     </div>

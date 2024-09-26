@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { deleteOrder } from '../functions/delete_functions';
-import { addOrder } from '../functions/create_functions';
+import { addOrder} from '../functions/create_functions';
+import { updateOrder } from '../functions/edit_functions';
 import './section_style.scss';
 
 const Orders = () => {
@@ -12,6 +13,7 @@ const Orders = () => {
     total_price: '',
     status: ''
   });
+  const [orderToEdit, setOrderToEdit] = useState(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -34,7 +36,7 @@ const Orders = () => {
   const handleDelete = async (id) => {
     try {
       await deleteOrder(id);
-      setOrders(orders.filter(order => order.id !== id)); // Actualiza el estado para eliminar el pedido
+      setOrders(orders.filter(order => order.id !== id));
     } catch (error) {
       console.error('Error deleting order', error);
     }
@@ -43,10 +45,38 @@ const Orders = () => {
   const handleAddOrder = async () => {
     try {
       const addedOrder = await addOrder(newOrder);
-      setOrders([...orders, addedOrder]); // Actualiza el estado para añadir el nuevo pedido
-      setNewOrder({ user_id: '', order_date: '', total_price: '', status: '' }); // Limpia el formulario
+      setOrders([...orders, addedOrder]);
+      setNewOrder({ user_id: '', order_date: '', total_price: '', status: '' });
     } catch (error) {
       console.error('Error adding order', error);
+    }
+  };
+
+  const handleEditOrder = (order) => {
+    setOrderToEdit(order);
+    // Convertir la fecha al formato correcto
+    setNewOrder({
+      ...order,
+      order_date: order.order_date.split('T')[0]
+    });
+  };
+
+  const handleUpdateOrder = async () => {
+    try {
+      const updatedOrder = await updateOrder(orderToEdit.id, newOrder);
+      setOrders(orders.map(order => (order.id === orderToEdit.id ? updatedOrder : order)));
+      setOrderToEdit(null);
+      setNewOrder({ user_id: '', order_date: '', total_price: '', status: '' });
+      // Refrescar la lista de pedidos después de actualizar
+      const token = localStorage.getItem('token');  
+      const response = await axios.get('https://vikingsdb.up.railway.app/orders/', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setOrders(response.data);
+    } catch (error) {
+      console.error('Error updating order', error);
     }
   };
 
@@ -72,11 +102,11 @@ const Orders = () => {
             <li key={order.id}>
                 <span>{order.id}</span>
                 <span>{order.user_id}</span>
-                <span>{order.order_date}</span>
+                <span>{order.order_date.split('T')[0]}</span>
                 <span>{order.total_price}</span>
                 <span>{order.status}</span>
                 <span>
-                    <button className='edit-button'>Editar</button>
+                    <button className='edit-button' onClick={() => handleEditOrder(order)}>Editar</button>
                     <button className='delete-button' onClick={() => handleDelete(order.id)}>Eliminar</button>
                 </span>
             </li>
@@ -84,7 +114,7 @@ const Orders = () => {
         </ul>
         </div>
         <div className="section">
-          <h2>Añadir Pedido</h2>
+          <h2>{orderToEdit ? 'Editar Pedido' : 'Añadir Pedido'}</h2>
           <form className="create-form">
             <label>Usuario ID:</label>
             <input type="text" name="user_id" value={newOrder.user_id} onChange={handleChange} />
@@ -94,7 +124,9 @@ const Orders = () => {
             <input type="number" name="total_price" value={newOrder.total_price} onChange={handleChange} />
             <label>Estado:</label>
             <input type="text" name="status" value={newOrder.status} onChange={handleChange} />
-            <button type="button" onClick={handleAddOrder}>Crear</button>
+            <button type="button" onClick={orderToEdit ? handleUpdateOrder : handleAddOrder}>
+              {orderToEdit ? 'Actualizar' : 'Crear'}
+            </button>
           </form>
         </div>
     </div>

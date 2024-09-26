@@ -3,6 +3,7 @@ import axios from 'axios';
 import './section_style.scss';
 import { deleteBlog } from '../functions/delete_functions';
 import { addBlog } from '../functions/create_functions';
+import { updateBlog } from '../functions/edit_functions';
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -10,8 +11,10 @@ const Blogs = () => {
     title: '',
     content: '',
     date: '',
-    author: ''
+    author_id: '',
+    image: ''
   });
+  const [blogToEdit, setBlogToEdit] = useState(null);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -29,7 +32,7 @@ const Blogs = () => {
   const handleDelete = async (id) => {
     try {
       await deleteBlog(id);
-      setBlogs(blogs.filter(blog => blog.id !== id)); // Actualiza el estado para eliminar el blog
+      setBlogs(blogs.filter(blog => blog.id !== id));
     } catch (error) {
       console.error('Error deleting blog', error);
     }
@@ -38,10 +41,35 @@ const Blogs = () => {
   const handleAddBlog = async () => {
     try {
       const addedBlog = await addBlog(newBlog);
-      setBlogs([...blogs, addedBlog]); // Actualiza el estado para añadir el nuevo blog
-      setNewBlog({ title: '', content: '', date: '', author: '' }); // Limpia el formulario
+      setBlogs([...blogs, addedBlog]);
+      setNewBlog({ title: '', content: '', date: '', author_id: '', image: '' });
     } catch (error) {
       console.error('Error adding blog', error);
+    }
+  };
+
+  const handleEditBlog = (blog) => {
+    setBlogToEdit(blog);
+    setNewBlog({
+      title: blog.title || '',
+      content: blog.content || '',
+      date: blog.date ? blog.date.split('T')[0] : '',
+      author_id: blog.author_id || '',
+      image: blog.image || ''
+    });
+  };
+
+  const handleUpdateBlog = async () => {
+    try {
+      const updatedBlog = await updateBlog(blogToEdit.id, newBlog);
+      setBlogs(blogs.map(blog => (blog.id === blogToEdit.id ? updatedBlog : blog)));
+      setBlogToEdit(null);
+      setNewBlog({ title: '', content: '', date: '', author_id: '', image: '' });
+      // Refrescar la lista de blogs después de actualizar
+      const response = await axios.get('https://vikingsdb.up.railway.app/blog/');
+      setBlogs(response.data);
+    } catch (error) {
+      console.error('Error updating blog', error);
     }
   };
 
@@ -66,10 +94,10 @@ const Blogs = () => {
             <li key={blog.id}>
                 <span>{blog.title}</span>
                 <span>{blog.content}</span>
-                <span>{blog.date}</span>
+                <span>{blog.date.split('T')[0]}</span>
                 <span>{blog.author_id}</span>
                 <span>
-                    <button className='edit-button'>Editar</button>
+                    <button className='edit-button' onClick={() => handleEditBlog(blog)}>Editar</button>
                     <button className='delete-button' onClick={() => handleDelete(blog.id)}>Eliminar</button>
                 </span>
             </li>
@@ -77,19 +105,21 @@ const Blogs = () => {
         </ul>
         </div>
         <div className="section">
-          <h2>Añadir Blog</h2>
+          <h2>{blogToEdit ? 'Editar Blog' : 'Añadir Blog'}</h2>
           <form className="create-form">
             <label>Título:</label>
             <input type="text" name="title" value={newBlog.title} onChange={handleChange} />
             <label>Contenido:</label>
             <input type="text" name="content" value={newBlog.content} onChange={handleChange} />
-            <label>Imagen:</label>
-            <input type="text" name="image" value={newBlog.image} onChange={handleChange} />
             <label>Fecha:</label>
             <input type="date" name="date" value={newBlog.date} onChange={handleChange} />
             <label>Autor:</label>
             <input type="text" name="author_id" value={newBlog.author_id} onChange={handleChange} />
-            <button type="button" onClick={handleAddBlog}>Crear</button>
+            <label>Imagen:</label>
+            <input type="text" name="image" value={newBlog.image} onChange={handleChange} />
+            <button type="button" onClick={blogToEdit ? handleUpdateBlog : handleAddBlog}>
+              {blogToEdit ? 'Actualizar' : 'Crear'}
+            </button>
           </form>
         </div>
     </div>
