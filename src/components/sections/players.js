@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
+import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import './section_style.scss';
 
 const Players = () => {
@@ -21,7 +23,11 @@ const Players = () => {
   return (
     <div className="container">
         <div className="section">
-        <h2>Jugadores</h2>
+        <h2>Jugadores 
+          <button className="icon-button">
+            <FontAwesomeIcon icon={faSquarePlus} />
+          </button>
+        </h2>
         <ul>
             <li className="header">
             <span>Imagen</span>
@@ -29,6 +35,7 @@ const Players = () => {
             <span>Rol</span>
             <span>Biografía</span>
             <span>Twitter</span>
+            <span>Acciones</span>
             </li>
             {players.map((player) => (
             <li key={player.id}>
@@ -37,6 +44,10 @@ const Players = () => {
                 <span>{player.role}</span>
                 <span>{player.bio}</span>
                 <span>{player.twitter}</span>
+                <span>
+                    <button className='edit-button'>Editar</button>
+                    <button className='delete-button'>Eliminar</button>
+                </span>
             </li>
             ))}
         </ul>

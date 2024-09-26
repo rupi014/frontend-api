@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './section_style.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -21,7 +23,12 @@ const Products = () => {
   return (
     <div className="container">
         <div className="section">
-        <h2>Productos</h2>
+        <h2>
+          Productos 
+          <button className="icon-button">
+            <FontAwesomeIcon icon={faSquarePlus} />
+          </button>
+        </h2>
         <ul>
             <li className="header">
             <span>Imagen</span>
@@ -30,6 +37,7 @@ const Products = () => {
             <span>Precio</span>
             <span>Categoría</span>
             <span>Stock</span>
+            <span>Acciones</span>
             </li>
             {products.map((product) => (
             <li key={product.id}>
@@ -39,6 +47,10 @@ const Products = () => {
                 <span>{product.price}</span>
                 <span>{product.category}</span>
                 <span>{product.stock}</span>
+                <span>
+                    <button className='edit-button'>Editar</button>
+                    <button className='delete-button'>Eliminar</button>
+                </span>
             </li>
             ))}
         </ul>

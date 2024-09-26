@@ -21,10 +21,26 @@ html, body {
   }
   
   .section h2 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
+    font-size: 2em;
+    margin-bottom: 50px;
     text-align: center;
     color: #FFCA00;
+    position: relative; /* Para posicionar el botón del icono */
+  }
+  
+  .icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    color: #FFCA00;
+    transition: color 0.3s;
+  }
+  
+  .icon-button:hover {
+    color: #037403;
+    background: none; 
+    border: none;
   }
   
   .section ul {
@@ -61,4 +77,22 @@ html, body {
   .section li span {
     flex: 1;
     text-align: center;
+  }
+  
+  .section li span button {
+    padding: 5px 10px; 
+    font-size: 0.8em; 
+    margin: 0 2px; 
+    flex: none; 
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .edit-button:hover {
+    background-color: blue;
+    color: white;
+  }
+  
+  .delete-button:hover {
+    background-color: red;
+    color: white;
   }

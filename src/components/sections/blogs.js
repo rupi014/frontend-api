@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './section_style.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
+import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -21,13 +23,18 @@ const Blogs = () => {
   return (
     <div className="container">
         <div className="section">
-        <h2>Blogs</h2>
+        <h2>Blogs 
+          <button className="icon-button">
+            <FontAwesomeIcon icon={faSquarePlus} />
+          </button>
+          </h2>
         <ul>
             <li className="header">
             <span>Título</span>
             <span>Contenido</span>
             <span>Fecha</span>
             <span>Autor</span>
+            <span>Acciones</span>
             </li>
             {blogs.map((blog) => (
             <li key={blog.id}>
@@ -35,6 +42,10 @@ const Blogs = () => {
                 <span>{blog.content}</span>
                 <span>{blog.date}</span>
                 <span>{blog.author}</span>
+                <span>
+                    <button className='edit-button'>Editar</button>
+                    <button className='delete-button'>Eliminar</button>
+                </span>
             </li>
             ))}
         </ul>

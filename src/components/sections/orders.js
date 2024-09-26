@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
+import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import './section_style.scss';
 
 const Orders = () => {
@@ -26,7 +28,11 @@ const Orders = () => {
   return (
     <div className="container">
         <div className="section">
-        <h2>Pedidos</h2>
+        <h2>Pedidos 
+          <button className="icon-button">
+            <FontAwesomeIcon icon={faSquarePlus} />
+          </button>
+        </h2>
         <ul>
             <li className="header">
             <span>ID</span>
@@ -34,6 +40,7 @@ const Orders = () => {
             <span>Fecha</span>
             <span>Total</span>
             <span>Estado</span>
+            <span>Acciones</span>
             </li>
             {orders.map((order) => (
             <li key={order.id}>
@@ -42,6 +49,10 @@ const Orders = () => {
                 <span>{order.order_date}</span>
                 <span>{order.total_price}</span>
                 <span>{order.status}</span>
+                <span>
+                    <button className='edit-button'>Editar</button>
+                    <button className='delete-button'>Eliminar</button>
+                </span>
             </li>
             ))}
         </ul>
