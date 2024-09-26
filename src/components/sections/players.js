@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+import { deletePlayer } from '../functions/delete_functions';
 import './section_style.scss';
 
 const Players = () => {
@@ -19,6 +20,15 @@ const Players = () => {
 
     fetchPlayers();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deletePlayer(id);
+      setPlayers(players.filter(player => player.id !== id)); // Actualiza el estado para eliminar el jugador
+    } catch (error) {
+      console.error('Error deleting player', error);
+    }
+  };
 
   return (
     <div className="container">
@@ -46,7 +56,7 @@ const Players = () => {
                 <span>{player.twitter}</span>
                 <span>
                     <button className='edit-button'>Editar</button>
-                    <button className='delete-button'>Eliminar</button>
+                    <button className='delete-button' onClick={() => handleDelete(player.id)}>Eliminar</button>
                 </span>
             </li>
             ))}

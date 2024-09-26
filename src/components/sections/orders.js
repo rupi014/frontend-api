@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+import { deleteOrder } from '../functions/delete_functions';
 import './section_style.scss';
 
 const Orders = () => {
@@ -24,6 +25,15 @@ const Orders = () => {
 
     fetchOrders();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteOrder(id);
+      setOrders(orders.filter(order => order.id !== id)); // Actualiza el estado para eliminar el pedido
+    } catch (error) {
+      console.error('Error deleting order', error);
+    }
+  };
 
   return (
     <div className="container">
@@ -51,7 +61,7 @@ const Orders = () => {
                 <span>{order.status}</span>
                 <span>
                     <button className='edit-button'>Editar</button>
-                    <button className='delete-button'>Eliminar</button>
+                    <button className='delete-button' onClick={() => handleDelete(order.id)}>Eliminar</button>
                 </span>
             </li>
             ))}

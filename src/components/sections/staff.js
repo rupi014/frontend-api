@@ -3,6 +3,7 @@ import axios from 'axios';
 import './section_style.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+import { deleteStaff } from '../functions/delete_functions';
 
 const Staff = () => {
   const [staff, setStaff] = useState([]);
@@ -19,6 +20,15 @@ const Staff = () => {
 
     fetchStaff();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteStaff(id);
+      setStaff(staff.filter(member => member.id !== id)); // Actualiza el estado para eliminar el miembro del staff
+    } catch (error) {
+      console.error('Error deleting staff member', error);
+    }
+  };
 
   return (  
     <div className="container">
@@ -46,7 +56,7 @@ const Staff = () => {
             <span>{member.twitter}</span>
             <span>
               <button className='edit-button'>Editar</button>
-              <button className='delete-button'>Eliminar</button>
+              <button className='delete-button' onClick={() => handleDelete(member.id)}>Eliminar</button>
             </span>
           </li>
         ))}

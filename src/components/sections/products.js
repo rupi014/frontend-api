@@ -3,6 +3,7 @@ import axios from 'axios';
 import './section_style.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+import { deleteProduct } from '../functions/delete_functions';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -19,6 +20,15 @@ const Products = () => {
 
     fetchProducts();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteProduct(id);
+      setProducts(products.filter(product => product.id !== id)); // Actualiza el estado para eliminar el producto
+    } catch (error) {
+      console.error('Error deleting product', error);
+    }
+  };
 
   return (
     <div className="container">
@@ -49,7 +59,7 @@ const Products = () => {
                 <span>{product.stock}</span>
                 <span>
                     <button className='edit-button'>Editar</button>
-                    <button className='delete-button'>Eliminar</button>
+                    <button className='delete-button' onClick={() => handleDelete(product.id)}>Eliminar</button>
                 </span>
             </li>
             ))}

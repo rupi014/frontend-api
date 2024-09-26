@@ -3,6 +3,7 @@ import axios from 'axios';
 import './section_style.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+import { deleteBlog } from '../functions/delete_functions';
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -19,6 +20,15 @@ const Blogs = () => {
 
     fetchBlogs();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteBlog(id);
+      setBlogs(blogs.filter(blog => blog.id !== id)); // Actualiza el estado para eliminar el blog
+    } catch (error) {
+      console.error('Error deleting blog', error);
+    }
+  };
 
   return (
     <div className="container">
@@ -44,7 +54,7 @@ const Blogs = () => {
                 <span>{blog.author}</span>
                 <span>
                     <button className='edit-button'>Editar</button>
-                    <button className='delete-button'>Eliminar</button>
+                    <button className='delete-button' onClick={() => handleDelete(blog.id)}>Eliminar</button>
                 </span>
             </li>
             ))}
