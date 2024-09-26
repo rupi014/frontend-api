@@ -8,13 +8,14 @@
 }
 
 h1 {
-  font-size: 2em;
+  font-size: 3em;
   margin-bottom: 20px;
   text-align: center;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
 }
 
 h2 {
-  font-size: 1.5em;
+  font-size: 2em;
   margin-bottom: 40px;
   text-align: center;
   color: #FFCA00;
@@ -36,6 +37,7 @@ h2 {
   width: 150px; /* Ajusta el tamaño del botón */
   height: 150px; /* Hace que el botón sea cuadrado */
   text-align: center;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
   background-color: #2f2e2e;
   color: #FFCA00;
   text-decoration: none;

@@ -38,7 +38,7 @@ const LoginForm = () => {
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit}>
-        <h2>Iniciar Sesión</h2>
+        <h1>Inicio de Sesión</h1>
         <div>
           <label>Usuario:</label>
           <input 

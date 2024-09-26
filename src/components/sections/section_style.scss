@@ -81,7 +81,9 @@
   .textarea {
     width: 100%;
     box-sizing: border-box; 
-    margin-bottom: 10px;
+    font-size: 1.2rem;
+    font-family: 'Helvetica', sans-serif;
+    resize: none;
   }
 
   .edit-button:hover {

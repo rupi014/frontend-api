@@ -7,7 +7,7 @@
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: 3rem;
     color: #FFCA00;
     margin-bottom: 1rem;
 }
@@ -16,6 +16,7 @@ p {
     font-size: 1.25rem;
     color: #FFCA00;
     margin-bottom: 2rem;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
 }
 
 a {
@@ -33,6 +34,7 @@ a {
   justify-content: center;
   align-items: center;
   height: 50px;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
 
     &:hover {
         background-color: #161616;
