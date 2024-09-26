@@ -1,12 +1,4 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden; /* Evita el deslizamiento horizontal */
-}
-
-.container {
+.container-status {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -60,43 +52,4 @@ h2 {
 .button:hover {
   background-color: #161616;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Aumenta la sombra al pasar el ratón */
-}
-
-.section {
-  width: 80%;
-  margin-bottom: 20px;
-}
-
-.section h2 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-  text-align: left;
-}
-
-.section ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.section li {
-  background-color: #f9f9f9;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-}
-
-.section li:nth-child(even) {
-  background-color: #e9e9e9;
-}
-
-.section.products li {
-  grid-template-columns: repeat(6, 1fr);
-}
-
-.section.blogs li {
-  grid-template-columns: repeat(4, 1fr);
 }

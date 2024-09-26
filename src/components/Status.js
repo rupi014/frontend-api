@@ -13,7 +13,7 @@ const Status = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container-status">
       <h1>API de Vikings</h1>
       <h2>Bienvenido {userName}.</h2>
       <div className="navigation">
