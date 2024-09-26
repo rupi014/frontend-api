@@ -115,7 +115,7 @@ const Products = () => {
             <label>Nombre:</label>
             <input type="text" name="name" value={newProduct.name} onChange={handleChange} />
             <label>Descripción:</label>
-            <input type="text" name="description" value={newProduct.description} onChange={handleChange} />
+            <textarea className='textarea' name="description" value={newProduct.description} onChange={handleChange} rows="4" />
             <label>Precio:</label>
             <input type="number" name="price" value={newProduct.price} onChange={handleChange} />
             <label>Categoría:</label>

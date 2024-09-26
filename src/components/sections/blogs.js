@@ -115,7 +115,7 @@ const Blogs = () => {
             <label>Título:</label>
             <input type="text" name="title" value={newBlog.title} onChange={handleChange} />
             <label>Contenido:</label>
-            <input type="text" name="content" value={newBlog.content} onChange={handleChange} />
+            <textarea className='textarea' name="content" value={newBlog.content} onChange={handleChange} rows="6" />
             <label>Fecha:</label>
             <input type="date" name="date" value={newBlog.date} onChange={handleChange} />
             <label>Autor:</label>

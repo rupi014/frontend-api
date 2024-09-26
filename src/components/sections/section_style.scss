@@ -78,8 +78,14 @@
     transition: background-color 0.3s, color 0.3s;
   }
 
+  .textarea {
+    width: 100%;
+    box-sizing: border-box; 
+    margin-bottom: 10px;
+  }
+
   .edit-button:hover {
-    background-color: blue;
+    background-color: darkgreen;
     color: white;
   }
   
