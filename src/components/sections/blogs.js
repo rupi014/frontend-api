@@ -4,9 +4,16 @@ import './section_style.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { deleteBlog } from '../functions/delete_functions';
+import { addBlog } from '../functions/create_functions';
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
+  const [newBlog, setNewBlog] = useState({
+    title: '',
+    content: '',
+    date: '',
+    author: ''
+  });
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -30,6 +37,21 @@ const Blogs = () => {
     }
   };
 
+  const handleAddBlog = async () => {
+    try {
+      const addedBlog = await addBlog(newBlog);
+      setBlogs([...blogs, addedBlog]); // Actualiza el estado para añadir el nuevo blog
+      setNewBlog({ title: '', content: '', date: '', author: '' }); // Limpia el formulario
+    } catch (error) {
+      console.error('Error adding blog', error);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewBlog({ ...newBlog, [name]: value });
+  };
+
   return (
     <div className="container">
         <div className="section">
@@ -37,7 +59,7 @@ const Blogs = () => {
           <button className="icon-button">
             <FontAwesomeIcon icon={faSquarePlus} />
           </button>
-          </h2>
+        </h2>
         <ul>
             <li className="header">
             <span>Título</span>
@@ -51,7 +73,7 @@ const Blogs = () => {
                 <span>{blog.title}</span>
                 <span>{blog.content}</span>
                 <span>{blog.date}</span>
-                <span>{blog.author}</span>
+                <span>{blog.author_id}</span>
                 <span>
                     <button className='edit-button'>Editar</button>
                     <button className='delete-button' onClick={() => handleDelete(blog.id)}>Eliminar</button>
@@ -59,6 +81,22 @@ const Blogs = () => {
             </li>
             ))}
         </ul>
+        </div>
+        <div className="section">
+          <h2>Añadir Blog</h2>
+          <form className="create-form">
+            <label>Título:</label>
+            <input type="text" name="title" value={newBlog.title} onChange={handleChange} />
+            <label>Contenido:</label>
+            <input type="text" name="content" value={newBlog.content} onChange={handleChange} />
+            <label>Imagen:</label>
+            <input type="text" name="image" value={newBlog.image} onChange={handleChange} />
+            <label>Fecha:</label>
+            <input type="date" name="date" value={newBlog.date} onChange={handleChange} />
+            <label>Autor:</label>
+            <input type="text" name="author_id" value={newBlog.author_id} onChange={handleChange} />
+            <button type="button" onClick={handleAddBlog}>Crear</button>
+          </form>
         </div>
     </div>
   );
