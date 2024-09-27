@@ -15,6 +15,7 @@ const Staff = () => {
     image: ''
   });
   const [staffToEdit, setStaffToEdit] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
     const fetchStaff = async () => {
@@ -40,9 +41,18 @@ const Staff = () => {
 
   const handleAddStaff = async () => {
     try {
-      const addedStaff = await addStaff(newStaff);
+      let imageUrl = '';
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', 'ml_default');
+        const response = await axios.post('https://api.cloudinary.com/v1_1/doo3lslbw/image/upload', formData);
+        imageUrl = response.data.secure_url;
+      }
+      const addedStaff = await addStaff({ ...newStaff, image: imageUrl });
       setStaff([...staff, addedStaff]);
       setNewStaff({ name: '', role: '', bio: '', twitter: '', image: '' });
+      setImageFile(null);
     } catch (error) {
       console.error('Error adding staff member', error);
     }
@@ -55,10 +65,19 @@ const Staff = () => {
 
   const handleUpdateStaff = async () => {
     try {
-      const updatedStaff = await updateStaff(staffToEdit.id, newStaff);
+      let imageUrl = newStaff.image;
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', 'ml_default');
+        const response = await axios.post('https://api.cloudinary.com/v1_1/doo3lslbw/image/upload', formData);
+        imageUrl = response.data.secure_url;
+      }
+      const updatedStaff = await updateStaff(staffToEdit.id, { ...newStaff, image: imageUrl });
       setStaff(staff.map(member => (member.id === staffToEdit.id ? updatedStaff : member)));
       setStaffToEdit(null);
       setNewStaff({ name: '', role: '', bio: '', twitter: '', image: '' });
+      setImageFile(null);
       // Refrescar la lista de staff después de actualizar
       const response = await axios.get('https://vikingsdb.up.railway.app/staff/');
       setStaff(response.data);
@@ -72,26 +91,36 @@ const Staff = () => {
     setNewStaff({ ...newStaff, [name]: value });
   };
 
+  const handleImageChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
+
   return (
     <div className="container">
         <div className="section">
         <h2>Staff</h2>
         <ul>
             <li className="header">
+            <span>Imagen</span>
             <span>Nombre</span>
             <span>Rol</span>
             <span>Biografía</span>
             <span>Twitter</span>
-            <span>Imagen</span>
             <span>Acciones</span>
             </li>
             {staff.map((member) => (
             <li key={member.id}>
+              <span>
+                  {member.image ? (
+                    <img src={member.image} alt={member.name} style={{ width: '50px', height: '50px' }} />
+                  ) : (
+                    'No Image'
+                  )}
+                </span>
                 <span>{member.name}</span>
                 <span>{member.role}</span>
                 <span>{member.bio}</span>
                 <span>{member.twitter}</span>
-                <span>{member.image}</span>
                 <span>
                     <button className='edit-button' onClick={() => handleEditStaff(member)}>Editar</button>
                     <button className='delete-button' onClick={() => handleDelete(member.id)}>Eliminar</button>
@@ -112,7 +141,7 @@ const Staff = () => {
             <label>Twitter:</label>
             <input type="text" name="twitter" value={newStaff.twitter} onChange={handleChange} />
             <label>Imagen:</label>
-            <input type="text" name="image" value={newStaff.image} onChange={handleChange} />
+            <input type="file" name="image" onChange={handleImageChange} />
             <button type="button" onClick={staffToEdit ? handleUpdateStaff : handleAddStaff}>
               {staffToEdit ? 'Actualizar' : 'Crear'}
             </button>

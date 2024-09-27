@@ -63,6 +63,7 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
+    align-items: center; /* Alinea verticalmente los elementos */
   }
   
   .section li:nth-child(even) {
@@ -72,6 +73,13 @@
   .section li span {
     flex: 1;
     text-align: center;
+    display: flex;
+    align-items: center; /* Alinea verticalmente el contenido dentro de span */
+    justify-content: center; /* Centra horizontalmente el contenido dentro de span */
+  }
+  
+  .section li span img {
+    margin: 0 auto; /* Centra la imagen horizontalmente */
   }
   
   .section li span button {
