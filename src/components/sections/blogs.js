@@ -15,6 +15,7 @@ const Blogs = () => {
     image: ''
   });
   const [blogToEdit, setBlogToEdit] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -40,9 +41,18 @@ const Blogs = () => {
 
   const handleAddBlog = async () => {
     try {
-      const addedBlog = await addBlog(newBlog);
+      let imageUrl = '';
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', 'ml_default'); // Asegúrate de que 'ml_default' sea correcto
+        const response = await axios.post('https://api.cloudinary.com/v1_1/doo3lslbw/image/upload', formData);
+        imageUrl = response.data.secure_url;
+      }
+      const addedBlog = await addBlog({ ...newBlog, image: imageUrl });
       setBlogs([...blogs, addedBlog]);
       setNewBlog({ title: '', content: '', date: '', author_id: '', image: '' });
+      setImageFile(null);
     } catch (error) {
       console.error('Error adding blog', error);
     }
@@ -61,10 +71,19 @@ const Blogs = () => {
 
   const handleUpdateBlog = async () => {
     try {
-      const updatedBlog = await updateBlog(blogToEdit.id, newBlog);
+      let imageUrl = newBlog.image;
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', 'ml_default'); // Asegúrate de que 'ml_default' sea correcto
+        const response = await axios.post('https://api.cloudinary.com/v1_1/doo3lslbw/image/upload', formData);
+        imageUrl = response.data.secure_url;
+      }
+      const updatedBlog = await updateBlog(blogToEdit.id, { ...newBlog, image: imageUrl });
       setBlogs(blogs.map(blog => (blog.id === blogToEdit.id ? updatedBlog : blog)));
       setBlogToEdit(null);
       setNewBlog({ title: '', content: '', date: '', author_id: '', image: '' });
+      setImageFile(null);
       // Refrescar la lista de blogs después de actualizar
       const response = await axios.get('https://vikingsdb.up.railway.app/blog/');
       setBlogs(response.data);
@@ -78,6 +97,10 @@ const Blogs = () => {
     setNewBlog({ ...newBlog, [name]: value });
   };
 
+  const handleImageChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
+
   const truncateContent = (content) => {
     const words = content.split(' ');
     return words.length > 5 ? words.slice(0, 5).join(' ') + '...' : content;
@@ -85,48 +108,56 @@ const Blogs = () => {
 
   return (
     <div className="container">
-        <div className="section">
+      <div className="section">
         <h2>Blogs</h2>
         <ul>
-            <li className="header">
+          <li className="header">
+            <span>Imagen</span>
             <span>Título</span>
             <span>Contenido</span>
             <span>Fecha</span>
             <span>Autor</span>
             <span>Acciones</span>
-            </li>
-            {blogs.map((blog) => (
+          </li>
+          {blogs.map((blog) => (
             <li key={blog.id}>
-                <span>{blog.title}</span>
-                <span>{truncateContent(blog.content)}</span>
-                <span>{blog.date.split('T')[0]}</span>
-                <span>{blog.author_id}</span>
-                <span>
-                    <button className='edit-button' onClick={() => handleEditBlog(blog)}>Editar</button>
-                    <button className='delete-button' onClick={() => handleDelete(blog.id)}>Eliminar</button>
-                </span>
+              <span>
+                {blog.image ? (
+                  <img src={blog.image} alt={blog.title} style={{ width: '50px', height: '50px' }} />
+                ) : (
+                  'No Image'
+                )}
+              </span>
+              <span>{blog.title}</span>
+              <span>{truncateContent(blog.content)}</span>
+              <span>{blog.date.split('T')[0]}</span>
+              <span>{blog.author_id}</span>
+              <span>
+                <button className='edit-button' onClick={() => handleEditBlog(blog)}>Editar</button>
+                <button className='delete-button' onClick={() => handleDelete(blog.id)}>Eliminar</button>
+              </span>
             </li>
-            ))}
+          ))}
         </ul>
-        </div>
-        <div className="section">
-          <h2>{blogToEdit ? 'Editar Blog' : 'Añadir Blog'}</h2>
-          <form className="create-form">
-            <label>Título:</label>
-            <input type="text" name="title" value={newBlog.title} onChange={handleChange} />
-            <label>Contenido:</label>
-            <textarea className='textarea' name="content" value={newBlog.content} onChange={handleChange} rows="6" />
-            <label>Fecha:</label>
-            <input type="date" name="date" value={newBlog.date} onChange={handleChange} />
-            <label>Autor:</label>
-            <input type="text" name="author_id" value={newBlog.author_id} onChange={handleChange} />
-            <label>Imagen:</label>
-            <input type="text" name="image" value={newBlog.image} onChange={handleChange} />
-            <button type="button" onClick={blogToEdit ? handleUpdateBlog : handleAddBlog}>
-              {blogToEdit ? 'Actualizar' : 'Crear'}
-            </button>
-          </form>
-        </div>
+      </div>
+      <div className="section">
+        <h2>{blogToEdit ? 'Editar Blog' : 'Añadir Blog'}</h2>
+        <form className="create-form">
+          <label>Título:</label>
+          <input type="text" name="title" value={newBlog.title} onChange={handleChange} />
+          <label>Contenido:</label>
+          <textarea className='textarea' name="content" value={newBlog.content} onChange={handleChange} rows="6" />
+          <label>Fecha:</label>
+          <input type="date" name="date" value={newBlog.date} onChange={handleChange} />
+          <label>Autor:</label>
+          <input type="text" name="author_id" value={newBlog.author_id} onChange={handleChange} />
+          <label>Imagen:</label>
+          <input type="file" name="image" onChange={handleImageChange} />
+          <button type="button" onClick={blogToEdit ? handleUpdateBlog : handleAddBlog}>
+            {blogToEdit ? 'Actualizar' : 'Crear'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
