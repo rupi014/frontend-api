@@ -28,7 +28,8 @@ a {
   color: #FFCA00;
   background-color: #2f2e2e;
   padding: 0.75rem 1.5rem;
-  border-radius: 4px;
+  border: 1px solid #FFCA00;
+  border-radius: 10px;
   margin: 0.5rem 0;
   transition: background-color 0.3s;
   width: 200px; /* Ancho fijo para los botones */
@@ -38,7 +39,7 @@ a {
   align-items: center;
   height: 50px;
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
-  box-shadow: 0px 0px 20px 0px rgba(255, 202, 0, 0.3);
+  box-shadow: 0px 0px 30px 0px rgba(255, 202, 0, 0.3);
 
 
     &:hover {
