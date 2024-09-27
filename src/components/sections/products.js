@@ -5,7 +5,6 @@ import { deleteProduct } from '../functions/delete_functions';
 import { addProduct } from '../functions/create_functions';
 import { updateProduct } from '../functions/edit_functions';
 
-
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
@@ -17,6 +16,7 @@ const Products = () => {
     image: ''
   });
   const [productToEdit, setProductToEdit] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -42,9 +42,18 @@ const Products = () => {
 
   const handleAddProduct = async () => {
     try {
-      const addedProduct = await addProduct(newProduct);
+      let imageUrl = '';
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', 'ml_default'); // Asegúrate de que 'ml_default' sea correcto
+        const response = await axios.post('https://api.cloudinary.com/v1_1/doo3lslbw/image/upload', formData);
+        imageUrl = response.data.secure_url;
+      }
+      const addedProduct = await addProduct({ ...newProduct, image: imageUrl });
       setProducts([...products, addedProduct]);
       setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '' });
+      setImageFile(null);
     } catch (error) {
       console.error('Error adding product', error);
     }
@@ -57,10 +66,19 @@ const Products = () => {
 
   const handleUpdateProduct = async () => {
     try {
-      const updatedProduct = await updateProduct(productToEdit.id, newProduct);
+      let imageUrl = newProduct.image;
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', 'ml_default'); // Asegúrate de que 'ml_default' sea correcto
+        const response = await axios.post('https://api.cloudinary.com/v1_1/doo3lslbw/image/upload', formData);
+        imageUrl = response.data.secure_url;
+      }
+      const updatedProduct = await updateProduct(productToEdit.id, { ...newProduct, image: imageUrl });
       setProducts(products.map(product => (product.id === productToEdit.id ? updatedProduct : product)));
       setProductToEdit(null);
       setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '' });
+      setImageFile(null);
       // Refrescar la lista de productos después de actualizar
       const response = await axios.get('https://vikingsdb.up.railway.app/products/');
       setProducts(response.data);
@@ -74,6 +92,10 @@ const Products = () => {
     setNewProduct({ ...newProduct, [name]: value });
   };
 
+  const handleImageChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
+
   const truncateDescription = (description) => {
     const words = description.split(' ');
     return words.length > 4 ? words.slice(0, 5).join(' ') + '...' : description;
@@ -81,10 +103,10 @@ const Products = () => {
 
   return (
     <div className="container">
-        <div className="section">
+      <div className="section">
         <h2>Productos</h2>
         <ul>
-            <li className="header">
+          <li className="header">
             <span>Imagen</span>
             <span>Nombre</span>
             <span>Descripción</span>
@@ -92,43 +114,49 @@ const Products = () => {
             <span>Categoría</span>
             <span>Stock</span>
             <span>Acciones</span>
-            </li>
-            {products.map((product) => (
+          </li>
+          {products.map((product) => (
             <li key={product.id}>
-                <span>{product.image}</span>
-                <span>{product.name}</span>
-                <span>{truncateDescription(product.description)}</span>
-                <span>{product.price}</span>
-                <span>{product.category}</span>
-                <span>{product.stock}</span>
-                <span>
-                    <button className='edit-button' onClick={() => handleEditProduct(product)}>Editar</button>
-                    <button className='delete-button' onClick={() => handleDelete(product.id)}>Eliminar</button>
-                </span>
+              <span>
+                {product.image ? (
+                  <img src={product.image} alt={product.name} style={{ width: '50px', height: '50px' }} />
+                ) : (
+                  'No Image'
+                )}
+              </span>
+              <span>{product.name}</span>
+              <span>{truncateDescription(product.description)}</span>
+              <span>{product.price}</span>
+              <span>{product.category}</span>
+              <span>{product.stock}</span>
+              <span>
+                <button className='edit-button' onClick={() => handleEditProduct(product)}>Editar</button>
+                <button className='delete-button' onClick={() => handleDelete(product.id)}>Eliminar</button>
+              </span>
             </li>
-            ))}
+          ))}
         </ul>
-        </div>
-        <div className="section">
-          <h2>{productToEdit ? 'Editar Producto' : 'Añadir Producto'}</h2>
-          <form className="create-form">
-            <label>Nombre:</label>
-            <input type="text" name="name" value={newProduct.name} onChange={handleChange} />
-            <label>Descripción:</label>
-            <textarea className='textarea' name="description" value={newProduct.description} onChange={handleChange} rows="4" />
-            <label>Precio:</label>
-            <input type="number" name="price" value={newProduct.price} onChange={handleChange} />
-            <label>Categoría:</label>
-            <input type="text" name="category" value={newProduct.category} onChange={handleChange} />
-            <label>Stock:</label>
-            <input type="number" name="stock" value={newProduct.stock} onChange={handleChange} />
-            <label>Imagen:</label>
-            <input type="text" name="image" value={newProduct.image} onChange={handleChange} />
-            <button type="button" onClick={productToEdit ? handleUpdateProduct : handleAddProduct}>
-              {productToEdit ? 'Actualizar' : 'Crear'}
-            </button>
-          </form>
-        </div>
+      </div>
+      <div className="section">
+        <h2>{productToEdit ? 'Editar Producto' : 'Añadir Producto'}</h2>
+        <form className="create-form">
+          <label>Nombre:</label>
+          <input type="text" name="name" value={newProduct.name} onChange={handleChange} />
+          <label>Descripción:</label>
+          <textarea className='textarea' name="description" value={newProduct.description} onChange={handleChange} rows="4" />
+          <label>Precio:</label>
+          <input type="number" name="price" value={newProduct.price} onChange={handleChange} />
+          <label>Categoría:</label>
+          <input type="text" name="category" value={newProduct.category} onChange={handleChange} />
+          <label>Stock:</label>
+          <input type="number" name="stock" value={newProduct.stock} onChange={handleChange} />
+          <label>Imagen:</label>
+          <input type="file" name="image" onChange={handleImageChange} />
+          <button type="button" onClick={productToEdit ? handleUpdateProduct : handleAddProduct}>
+            {productToEdit ? 'Actualizar' : 'Crear'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
