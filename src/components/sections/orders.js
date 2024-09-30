@@ -100,16 +100,18 @@ const Orders = () => {
       setOrders([...orders, addedOrder]);
 
       // Añadir productos temporales al nuevo pedido mediante el endpoint
+      let newTotal = newOrder.total_price;
       await Promise.all(tempProducts.map(async (product) => {
         const price = product.price; // Asumimos que el precio ya está en los detalles del producto
         const total = price * product.quantity;
+        newTotal += total;
 
         await axios.post('https://vikingsdb.up.railway.app/products_order/', {
           order_id: addedOrder.id,
           product_id: product.product_id,
           quantity: product.quantity,
           price: price,
-          total: total
+          total: newTotal
         }, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -117,7 +119,17 @@ const Orders = () => {
         });
       }));
 
-      setNewOrder({ user_id: '', order_date: '', total_price: 0, status: '', products: [] });
+      // Actualizar el total del pedido
+      const updatedOrder = await updateOrder(addedOrder.id, {
+        ...newOrder,
+        total_price: newTotal,
+        products: tempProducts
+      });
+
+      // Actualizar el estado de los pedidos
+      setOrders([...orders, updatedOrder]);
+
+      setNewOrder({ user_id: '', order_date: '', total_price: newTotal, status: '', products: [] });
       setTempProducts([]); // Limpiar productos temporales
     } catch (error) {
       console.error('Error adding order', error);
@@ -129,7 +141,8 @@ const Orders = () => {
     setNewOrder({
       ...order,
       order_date: order.order_date.split('T')[0],
-      products: order.products || []
+      products: order.products || [],
+      total_price: order.total_price || 0
     });
     fetchProducts(order.id); // Obtener productos del pedido
   };
@@ -137,9 +150,9 @@ const Orders = () => {
   const handleUpdateOrder = async () => {
     try {
       const token = localStorage.getItem('token');
-      let newTotal = newOrder.total_price;
+      let newTotal = products.reduce((acc, product) => acc + (product.price * product.quantity), 0);
 
-      // Añadir productos temporales al pedido mediante el endpoint
+      // Añadir productos temporales al pedido mediante el endpoint y calcular su total
       await Promise.all(tempProducts.map(async (product) => {
         const price = product.price; // Asumimos que el precio ya está en los detalles del producto
         const total = price * product.quantity;
@@ -150,7 +163,7 @@ const Orders = () => {
           product_id: product.product_id,
           quantity: product.quantity,
           price: price,
-          total: total
+          total: newTotal 
         }, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -166,7 +179,7 @@ const Orders = () => {
       });
       setOrders(orders.map(order => (order.id === orderToEdit.id ? updatedOrder : order)));
       setOrderToEdit(null);
-      setNewOrder({ user_id: '', order_date: '', total_price: 0, status: '', products: [] });
+      setNewOrder({ user_id: '', order_date: '', total_price: newTotal, status: '', products: [] });
       setTempProducts([]); // Limpiar productos temporales
       const response = await axios.get('https://vikingsdb.up.railway.app/orders/', {
         headers: {
@@ -198,20 +211,11 @@ const Orders = () => {
         setTempProducts(updatedTempProducts);
         setNewProduct({ product_id: '', quantity: '' });
 
-        // Calcular el nuevo total del pedido
-        const newTotal = updatedTempProducts.reduce((acc, product) => acc + (product.price * product.quantity), 0);
+        // Calcular el nuevo total del pedido incluyendo productos existentes y temporales
+        const newTotal = [...products, ...updatedTempProducts].reduce((acc, product) => acc + (product.price * product.quantity), 0);
         setNewOrder({ ...newOrder, total_price: newTotal });
 
-        // Actualizar el pedido en el servidor
-        if (orderToEdit) {
-          const updatedOrder = await updateOrder(orderToEdit.id, {
-            ...newOrder,
-            total_price: newTotal,
-            products: [...products, ...updatedTempProducts]
-          });
-          setOrders(orders.map(order => (order.id === orderToEdit.id ? updatedOrder : order)));
-          setOrderToEdit(updatedOrder);
-        }
+        // No actualizar el pedido en el servidor aquí
       } else {
         console.error('Product not found');
       }
@@ -307,14 +311,6 @@ const Orders = () => {
                         {/* Aquí puedes agregar funcionalidad para editar el producto */}
                       </li>
                     ))}
-                    {tempProducts.map((product, index) => (
-                      <li key={`temp-${product.product_id}-${index}`}>
-                        <img src={product.image} alt={product.name} style={{ width: '50px', height: '50px' }} />
-                        <span>ID: {product.product_id}</span>
-                        <span>Nombre: {product.name}</span>
-                        <span>Cantidad: {product.quantity}</span>
-                      </li>
-                    ))}
                   </ul>
                 </li>
               )}
@@ -333,29 +329,22 @@ const Orders = () => {
           <input type="text" name="status" value={newOrder.status} onChange={handleChange} />
           <div className='add-products-container'>
             <div className='add-products-form'>
-            <h3>Añadir Productos</h3>
-            <ul>
-              {newOrder.products.map((product, index) => (
-                <li key={`${product.product_id}-${index}`}>
-                  <span>Producto ID: {product.product_id}</span>
-                  <span>Cantidad: {product.quantity}</span>
-                  <button type="button" onClick={() => handleDeleteProduct(orderToEdit, product.product_id)}>Eliminar</button>
-                </li>
-              ))}
-              {tempProducts.map((product, index) => (
-                <li key={`temp-${product.product_id}-${index}`}>
-                  <span>ID: {product.product_id}</span>
-                  <span>Nombre: {product.name}</span>
-                  <span>Cantidad: {product.quantity}</span>
-                  <span>Precio: {product.price}€</span>  
-                </li>
-              ))}
-            </ul>
-            <label>Producto ID:</label>
-            <input type="text" name="product_id" value={newProduct.product_id} onChange={handleProductChange} />
-            <label>Cantidad:</label>
-            <input type="number" name="quantity" value={newProduct.quantity} onChange={handleProductChange} />
-            <button type="button" onClick={handleAddProduct}>Añadir Producto</button>
+              <h3>Añadir Productos</h3>
+              <ul>
+                {tempProducts.map((product, index) => (
+                  <li key={`temp-${product.product_id}-${index}`}>
+                    <span>ID: {product.product_id}</span>
+                    <span>Nombre: {product.name}</span>
+                    <span>Cantidad: {product.quantity}</span>
+                    <span>Precio: {product.price}€</span>  
+                  </li>
+                ))}
+              </ul>
+              <label>Producto ID:</label>
+              <input type="text" name="product_id" value={newProduct.product_id} onChange={handleProductChange} />
+              <label>Cantidad:</label>
+              <input type="number" name="quantity" value={newProduct.quantity} onChange={handleProductChange} />
+              <button type="button" onClick={handleAddProduct}>Añadir Producto</button>
             </div>
           </div>
           <button type="button" onClick={orderToEdit ? handleUpdateOrder : handleAddOrder}>
