@@ -100,7 +100,7 @@ const Orders = () => {
       setOrders([...orders, addedOrder]);
 
       // Añadir productos temporales al nuevo pedido mediante el endpoint
-      let newTotal = newOrder.total_price;
+      let newTotal = 0;
       await Promise.all(tempProducts.map(async (product) => {
         const price = product.price; // Asumimos que el precio ya está en los detalles del producto
         const total = price * product.quantity;
@@ -111,7 +111,7 @@ const Orders = () => {
           product_id: product.product_id,
           quantity: product.quantity,
           price: price,
-          total: newTotal
+          total: total
         }, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -129,7 +129,7 @@ const Orders = () => {
       // Actualizar el estado de los pedidos
       setOrders([...orders, updatedOrder]);
 
-      setNewOrder({ user_id: '', order_date: '', total_price: newTotal, status: '', products: [] });
+      setNewOrder({ user_id: '', order_date: '', total_price: 0, status: '', products: [] });
       setTempProducts([]); // Limpiar productos temporales
     } catch (error) {
       console.error('Error adding order', error);
