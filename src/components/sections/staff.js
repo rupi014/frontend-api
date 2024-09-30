@@ -125,7 +125,8 @@ const Staff = () => {
                 <span>{member.bio}</span>
                 <span>{member.twitter}</span>
                 <span>
-                    <button className='edit-button' onClick={() => handleEditStaff(member)}>Editar</button>
+                    <button className={`edit-button ${staffToEdit && staffToEdit.id === member.id ? 'hover' : ''}`}
+                    onClick={() => handleEditStaff(member)}>Editar</button>
                     <button className='delete-button' onClick={() => handleDelete(member.id)}>Eliminar</button>
                 </span>
             </li>

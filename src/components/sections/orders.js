@@ -331,7 +331,12 @@ const Orders = () => {
                   >
                     Ver Productos
                   </button>
-                  <button className='edit-button' onClick={() => handleEditOrder(order)}>Editar</button>
+                  <button
+                    className={`edit-button ${orderToEdit && orderToEdit.id === order.id ? 'hover' : ''}`}
+                    onClick={() => handleEditOrder(order)}
+                  >
+                    Editar
+                  </button>
                   <button className='delete-button' onClick={() => handleDelete(order.id)}>Eliminar</button>
                 </span>
               </li>

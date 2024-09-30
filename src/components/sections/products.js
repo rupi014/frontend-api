@@ -133,7 +133,8 @@ const Products = () => {
               <span>{product.category}</span>
               <span>{product.stock}</span>
               <span>
-                <button className='edit-button' onClick={() => handleEditProduct(product)}>Editar</button>
+                <button className={`edit-button ${productToEdit && productToEdit.id === product.id ? 'hover' : ''}`}
+                onClick={() => handleEditProduct(product)}>Editar</button>
                 <button className='delete-button' onClick={() => handleDelete(product.id)}>Eliminar</button>
               </span>
             </li>

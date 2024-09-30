@@ -136,7 +136,8 @@ const Blogs = () => {
               <span>{blog.date.split('T')[0]}</span>
               <span>{blog.author_id}</span>
               <span>
-                <button className='edit-button' onClick={() => handleEditBlog(blog)}>Editar</button>
+                <button className={`edit-button ${blogToEdit && blogToEdit.id === blog.id ? 'hover' : ''}`}
+                onClick={() => handleEditBlog(blog)}>Editar</button>
                 <button className='delete-button' onClick={() => handleDelete(blog.id)}>Eliminar</button>
               </span>
             </li>

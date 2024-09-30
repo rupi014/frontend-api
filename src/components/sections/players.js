@@ -124,7 +124,8 @@ const Players = () => {
               <span>{player.bio}</span>
               <span>{player.twitter}</span>
               <span>
-                <button className='edit-button' onClick={() => handleEditPlayer(player)}>Editar</button>
+                <button className={`edit-button ${playerToEdit && playerToEdit.id === player.id ? 'hover' : ''}`}
+                onClick={() => handleEditPlayer(player)}>Editar</button>
                 <button className='delete-button' onClick={() => handleDelete(player.id)}>Eliminar</button>
               </span>
             </li>
