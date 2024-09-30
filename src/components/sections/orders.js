@@ -180,7 +180,7 @@ const Orders = () => {
       let newTotal = products.reduce((acc, product) => acc + (product.price * product.quantity), 0);
 
       // Añadir productos temporales al pedido mediante el endpoint y calcular su total
-      await Promise.all(tempProducts.map(async (product) => {
+      const addedProducts = await Promise.all(tempProducts.map(async (product) => {
         const price = product.price; // Asumimos que el precio ya está en los detalles del producto
         const total = price * product.quantity;
         newTotal += total;
@@ -196,24 +196,29 @@ const Orders = () => {
             Authorization: `Bearer ${token}`
           }
         });
+
+        return {
+          ...product,
+          total: total
+        };
       }));
 
       // Actualizar el pedido
       const updatedOrder = await updateOrder(orderToEdit.id, {
         ...newOrder,
         total_price: newTotal,
-        products: [...products, ...tempProducts]
+        products: [...products, ...addedProducts]
       });
+
+      // Actualizar el estado local
       setOrders(orders.map(order => (order.id === orderToEdit.id ? updatedOrder : order)));
       setOrderToEdit(null);
       setNewOrder({ user_id: '', order_date: '', total_price: newTotal, status: '', products: [] });
       setTempProducts([]); // Limpiar productos temporales
-      const response = await axios.get('https://vikingsdb.up.railway.app/orders/', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setOrders(response.data);
+
+      // Actualizar la lista de productos del pedido
+      setProducts([...products, ...addedProducts]);
+      setSelectedOrderId(updatedOrder.id); // Asegurarse de que el pedido actualizado esté seleccionado
     } catch (error) {
       console.error('Error updating order', error);
     }
