@@ -143,7 +143,7 @@ const Orders = () => {
     }
   };
 
-  const handleEditOrder = (order) => {
+  const handleEditOrder = async (order) => {
     setOrderToEdit(order);
     setNewOrder({
       ...order,
@@ -151,7 +151,27 @@ const Orders = () => {
       products: order.products || [],
       total_price: order.total_price || 0
     });
-    fetchProducts(order.id); // Obtener productos del pedido
+
+    // Obtener productos del pedido
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`https://vikingsdb.up.railway.app/products_order/${order.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const productsWithDetails = await Promise.all(response.data.map(async (product) => {
+        const productDetails = await fetchProductDetails(product.product_id);
+        return {
+          ...product,
+          ...productDetails
+        };
+      }));
+      setProducts(productsWithDetails);
+      setSelectedOrderId(order.id); // Actualizar el pedido seleccionado
+    } catch (error) {
+      console.error('Error fetching products data', error);
+    }
   };
 
   const handleUpdateOrder = async () => {
