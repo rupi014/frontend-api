@@ -166,7 +166,7 @@ const Orders = () => {
           product_id: product.product_id,
           quantity: product.quantity,
           price: price,
-          total: newTotal 
+          total: total
         }, {
           headers: {
             Authorization: `Bearer ${token}`
