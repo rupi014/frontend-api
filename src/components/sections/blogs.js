@@ -31,6 +31,9 @@ const Blogs = () => {
   }, []);
 
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este blog?");
+    if (!confirmDelete) return;
+
     try {
       await deleteBlog(id);
       setBlogs(blogs.filter(blog => blog.id !== id));

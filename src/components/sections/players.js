@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { deletePlayer } from '../functions/delete_functions';
 import { addPlayer } from '../functions/create_functions';
-import { updatePlayer } from '../functions/edit_functions'; // Renombrar la importación
+import { updatePlayer } from '../functions/edit_functions';
 import './section_style.scss';
 
 const Players = () => {
@@ -14,7 +14,7 @@ const Players = () => {
     twitter: '',
     image: ''
   });
-  const [playerToEdit, setPlayerToEdit] = useState(null); // Renombrar la variable de estado
+  const [playerToEdit, setPlayerToEdit] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
@@ -31,9 +31,12 @@ const Players = () => {
   }, []);
 
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este jugador?");
+    if (!confirmDelete) return;
+
     try {
       await deletePlayer(id);
-      setPlayers(players.filter(player => player.id !== id)); // Actualiza el estado para eliminar el jugador
+      setPlayers(players.filter(player => player.id !== id));
     } catch (error) {
       console.error('Error deleting player', error);
     }
@@ -45,13 +48,13 @@ const Players = () => {
       if (imageFile) {
         const formData = new FormData();
         formData.append('file', imageFile);
-        formData.append('upload_preset', 'ml_default'); // Asegúrate de que 'ml_default' sea correcto
+        formData.append('upload_preset', 'ml_default');
         const response = await axios.post('https://api.cloudinary.com/v1_1/doo3lslbw/image/upload', formData);
         imageUrl = response.data.secure_url;
       }
       const addedPlayer = await addPlayer({ ...newPlayer, image: imageUrl });
-      setPlayers([...players, addedPlayer]); // Actualiza el estado para añadir el nuevo jugador
-      setNewPlayer({ name: '', role: '', bio: '', twitter: '', image: '' }); // Limpia el formulario
+      setPlayers([...players, addedPlayer]);
+      setNewPlayer({ name: '', role: '', bio: '', twitter: '', image: '' });
       setImageFile(null);
     } catch (error) {
       console.error('Error adding player', error);
@@ -69,7 +72,7 @@ const Players = () => {
       if (imageFile) {
         const formData = new FormData();
         formData.append('file', imageFile);
-        formData.append('upload_preset', 'ml_default'); // Asegúrate de que 'ml_default' sea correcto
+        formData.append('upload_preset', 'ml_default');
         const response = await axios.post('https://api.cloudinary.com/v1_1/doo3lslbw/image/upload', formData);
         imageUrl = response.data.secure_url;
       }
@@ -78,7 +81,6 @@ const Players = () => {
       setPlayerToEdit(null);
       setNewPlayer({ name: '', role: '', bio: '', twitter: '', image: '' });
       setImageFile(null);
-      // Refrescar la lista de jugadores después de actualizar
       const response = await axios.get('https://vikingsdb.up.railway.app/players/');
       setPlayers(response.data);
     } catch (error) {

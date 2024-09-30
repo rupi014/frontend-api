@@ -31,6 +31,9 @@ const Staff = () => {
   }, []);
 
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este miembro del staff?");
+    if (!confirmDelete) return;
+
     try {
       await deleteStaff(id);
       setStaff(staff.filter(member => member.id !== id));

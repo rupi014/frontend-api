@@ -32,6 +32,9 @@ const Products = () => {
   }, []);
 
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este producto?");
+    if (!confirmDelete) return;
+
     try {
       await deleteProduct(id);
       setProducts(products.filter(product => product.id !== id));
