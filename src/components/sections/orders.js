@@ -84,10 +84,14 @@ const Orders = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
     const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este pedido?");
     if (!confirmDelete) return;
 
+    deleteOrderAsync(id);
+  };
+
+  const deleteOrderAsync = async (id) => {
     try {
       await deleteOrder(id);
       setOrders(orders.filter(order => order.id !== id));
@@ -227,10 +231,14 @@ const Orders = () => {
     }
   };
 
-  const handleDeleteProduct = async (order, productId) => {
+  const handleDeleteProduct = (order, productId) => {
     const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este producto del pedido?");
     if (!confirmDelete) return;
 
+    deleteProductAsync(order, productId);
+  };
+
+  const deleteProductAsync = async (order, productId) => {
     try {
       const token = localStorage.getItem('token');
       await axios.delete(`https://vikingsdb.up.railway.app/products_order/${order.id}/${productId}`, {
