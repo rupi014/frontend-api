@@ -21,6 +21,11 @@
     text-align: center;
     color: #FFCA00;
   }
+
+  h3 {
+    color: #FFCA00;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7)
+  } 
   
   .icon-button {
     background: none;
@@ -108,7 +113,96 @@
     background-color: red;
     color: white;
   }
+
+  .products-table {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
   
+  .products-table h3 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .products-table ul {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .products-table li {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 5px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .products-table li:last-child {
+    border-bottom: none;
+  }
+  
+  .products-table span {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .products-table .delete-button-products:hover {
+    background-color: #ff1a1a;
+  }
+
+  .view-products-button {
+    border: 1px solid #ccc;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .view-products-button:hover,
+  .view-products-button.hover {
+    background-color: #FFCA00;
+    color: #1a1919;
+  }
+
+  .add-products-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .add-products-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #2f2e2e;
+    width: 60%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #FFCA00;
+    border-radius: 5px;
+  }
+
+  .add-products-form ul {
+    width: 100%; /* Asegúrate de que la lista de productos ocupe todo el ancho del formulario */
+    padding: 10px;
+    list-style-type: none;
+  }
+  
+  .add-products-form li {
+    display: flex;
+    justify-content: space-between; /* Distribuye el contenido de los elementos de la lista */
+    width: 100%; /* Asegúrate de que los elementos de la lista ocupen todo el ancho de la lista */
+    padding: 5px 0;
+  }
+
   /* Media Queries */
   @media (max-width: 768px) {
     .section {

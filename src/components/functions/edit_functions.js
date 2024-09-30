@@ -56,12 +56,12 @@ export const updateProduct = async (id, updatedProduct) => {
 };
 
 // Función para actualizar un pedido
-export const updateOrder = async (id, updatedOrder) => {
+export const updateOrder = async (orderId, updatedOrder) => {
   try {
-    const token = getAuthToken();
-    const response = await axios.put(`${API_URL}/orders/${id}`, updatedOrder, {
+    const token = localStorage.getItem('token');
+    const response = await axios.put(`https://vikingsdb.up.railway.app/orders/${orderId}`, updatedOrder, {
       headers: {
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
     return response.data;
