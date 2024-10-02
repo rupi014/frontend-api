@@ -13,7 +13,8 @@ const Products = () => {
     price: '',
     category: '',
     stock: '',
-    image: ''
+    image: '',
+    size: ''
   });
   const [productToEdit, setProductToEdit] = useState(null);
   const [imageFile, setImageFile] = useState(null);
@@ -55,7 +56,7 @@ const Products = () => {
       }
       const addedProduct = await addProduct({ ...newProduct, image: imageUrl });
       setProducts([...products, addedProduct]);
-      setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '' });
+      setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '', size: '' });
       setImageFile(null);
     } catch (error) {
       console.error('Error adding product', error);
@@ -80,7 +81,7 @@ const Products = () => {
       const updatedProduct = await updateProduct(productToEdit.id, { ...newProduct, image: imageUrl });
       setProducts(products.map(product => (product.id === productToEdit.id ? updatedProduct : product)));
       setProductToEdit(null);
-      setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '' });
+      setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '', size: '' });
       setImageFile(null);
       // Refrescar la lista de productos después de actualizar
       const response = await axios.get('https://vikingsdb.up.railway.app/products/');
@@ -116,6 +117,7 @@ const Products = () => {
             <span>Precio</span>
             <span>Categoría</span>
             <span>Stock</span>
+            <span>Talla</span>
             <span>Acciones</span>
           </li>
           {products.map((product) => (
@@ -132,6 +134,7 @@ const Products = () => {
               <span>{product.price}</span>
               <span>{product.category}</span>
               <span>{product.stock}</span>
+              <span>{product.size}</span>
               <span>
                 <button className={`edit-button ${productToEdit && productToEdit.id === product.id ? 'hover' : ''}`}
                 onClick={() => handleEditProduct(product)}>Editar</button>
@@ -154,6 +157,8 @@ const Products = () => {
           <input type="text" name="category" value={newProduct.category} onChange={handleChange} />
           <label>Stock:</label>
           <input type="number" name="stock" value={newProduct.stock} onChange={handleChange} />
+          <label>Talla:</label>
+          <input type="text" name="size" value={newProduct.size} onChange={handleChange} />
           <label>Imagen:</label>
           <input type="file" name="image" onChange={handleImageChange} />
           <button type="button" onClick={productToEdit ? handleUpdateProduct : handleAddProduct}>
