@@ -20,6 +20,7 @@ const Orders = () => {
   const [selectedOrderId, setSelectedOrderId] = useState(null); // Estado para el pedido seleccionado
   const [tempProducts, setTempProducts] = useState([]); // Estado para los productos temporales añadidos
   const [hoveredOrderId, setHoveredOrderId] = useState(null); // Estado para el efecto de hover del botón "Ver Productos"
+  const [existingProducts, setExistingProducts] = useState([]); // Estado para los productos existentes
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -36,7 +37,22 @@ const Orders = () => {
       }
     };
 
+    const fetchExistingProducts = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('https://vikingsdb.up.railway.app/products/', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setExistingProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching existing products', error);
+      }
+    };
+
     fetchOrders();
+    fetchExistingProducts();
   }, []);
 
   const fetchProductDetails = async (productId) => {
@@ -238,11 +254,17 @@ const Orders = () => {
     setNewProduct({ ...newProduct, [name]: value });
   };
 
+
   const handleAddProduct = async () => {
     try {
       const productDetails = await fetchProductDetails(newProduct.product_id);
       if (productDetails) {
-        const productWithDetails = { ...newProduct, ...productDetails };
+        // Establecer "Talla Única" si order_size está vacío
+        const productWithDetails = {
+          ...newProduct,
+          ...productDetails,
+          order_size: newProduct.order_size.trim() === '' ? 'Talla Única' : newProduct.order_size
+        };
         const updatedTempProducts = [...tempProducts, productWithDetails];
         setTempProducts(updatedTempProducts);
         setNewProduct({ product_id: '', quantity: '', order_size: '' });
@@ -251,13 +273,21 @@ const Orders = () => {
         const newTotal = [...products, ...updatedTempProducts].reduce((acc, product) => acc + (product.price * product.quantity), 0);
         setNewOrder({ ...newOrder, total_price: newTotal });
 
-  
       } else {
         console.error('Product not found');
       }
     } catch (error) {
       console.error('Error adding product', error);
     }
+  };
+
+  const handleRemoveTempProduct = (index) => {
+    const updatedTempProducts = tempProducts.filter((_, i) => i !== index);
+    setTempProducts(updatedTempProducts);
+  
+    // Calcular el nuevo total del pedido incluyendo productos existentes y temporales
+    const newTotal = [...products, ...updatedTempProducts].reduce((acc, product) => acc + (product.price * product.quantity), 0);
+    setNewOrder({ ...newOrder, total_price: newTotal });
   };
 
   const handleDeleteProduct = (order, productId) => {
@@ -387,7 +417,8 @@ const Orders = () => {
                     <span>Nombre: {product.name}</span>
                     <span>Cantidad: {product.quantity}</span>
                     <span>Talla: {product.order_size}</span>
-                    <span>Precio: {product.price}€</span>  
+                    <span>Precio: {product.price}€</span>
+                    <button className='delete-button-small' onClick={() => handleRemoveTempProduct(index)}>Eliminar</button>
                   </li>
                 ))}
               </ul>
@@ -399,7 +430,21 @@ const Orders = () => {
               <input type="text" name="order_size" value={newProduct.order_size} onChange={handleProductChange} />
               <button type="button" onClick={handleAddProduct}>Añadir Producto</button>
             </div>
+
+            <div className='existing-products-container'>
+            <h3>Productos Existentes</h3>
+            <ul>
+              {existingProducts.map((product) => (
+                <li key={product.id}>
+                  <span>ID: {product.id}</span>
+                  <span>Nombre: {product.name}</span>
+                  <span>{product.product_size}</span>
+                </li>
+              ))}
+            </ul>
           </div>
+          </div>
+          
           <button type="button" onClick={orderToEdit ? handleUpdateOrder : handleAddOrder}>
             {orderToEdit ? 'Actualizar' : 'Crear'}
           </button>

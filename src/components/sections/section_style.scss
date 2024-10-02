@@ -114,6 +114,19 @@
     color: white;
   }
 
+  .delete-button-small {
+    padding: 5px 5px; 
+    font-size: 0.9em; 
+    margin: 0 2px; 
+    flex: none; 
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .delete-button-small:hover {
+    background-color: red;
+    color: white;
+  }
+
   .products-table {
     display: flex;
     flex-direction: column;
@@ -192,7 +205,6 @@
 
   .add-products-form ul {
     width: 100%; /* Asegúrate de que la lista de productos ocupe todo el ancho del formulario */
-    padding: 10px;
     list-style-type: none;
   }
   
@@ -203,6 +215,45 @@
     padding: 5px 0;
   }
 
+  .existing-products-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #2f2e2e;
+    width: 40%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #FFCA00;
+    border-radius: 5px;
+  }
+  
+  .existing-products-container ul {
+    width: 100%; /* Asegúrate de que la lista de productos ocupe todo el ancho del contenedor */
+    padding: 10px;
+    list-style-type: none;
+    margin-top: 50px;
+  }
+  
+  .existing-products-container li {
+    display: flex;
+    justify-content: space-between; /* Distribuye el contenido de los elementos de la lista */
+    width: 100%; /* Asegúrate de que los elementos de la lista ocupen todo el ancho de la lista */
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .existing-products-container li:last-child {
+    border-bottom: none;
+  }
+  
+  .existing-products-container span {
+    flex: 1;
+    text-align: left;
+    color: black;
+  }
+
   .edit-button.hover {
     background-color: darkgreen; 
     color: white;
@@ -210,53 +261,72 @@
   }
 
   /* Media Queries */
-  @media (max-width: 768px) {
-    .section {
-        width: 90%;
-    }
-
-    .section h2 {
-        font-size: 1.5em;
-    }
-
-    .section .header {
-        display: none; // Oculta el header en pantallas de tablet y móviles
-    }
-
-    .section li {
-        flex-direction: column;
-        align-items: center; // Centra los elementos en modo tablet
-    }
-
-    .section li span {
-        text-align: center; // Centra el texto en modo tablet
-    }
-
-    .section li span button {
-        font-size: 0.9em;
-    }
+@media (max-width: 768px) {
+  .section {
+    width: 90%;
   }
 
-  @media (max-width: 480px) {
-    .section {
-        width: 100%;
-    }
-
-    .section h2 {
-        font-size: 1.2em;
-    }
-
-    .section li {
-        padding: 8px;
-        align-items: center; // Centra los elementos en modo móvil
-    }
-
-    .section li span {
-        text-align: center; // Centra el texto en modo móvil
-    }
-
-    .section li span button {
-        font-size: 0.8em;
-        padding: 4px 8px;
-    }
+  .section h2 {
+    font-size: 1.5em;
   }
+
+  .section .header {
+    display: none; // Oculta el header en pantallas de tablet y móviles
+  }
+
+  .section li {
+    flex-direction: column;
+    align-items: center; // Centra los elementos en modo tablet
+  }
+
+  .section li span {
+    text-align: center; // Centra el texto en modo tablet
+  }
+
+  .section li span button {
+    font-size: 0.9em;
+  }
+
+  .add-products-container {
+    flex-direction: column; // Apila los contenedores verticalmente en pantallas de tablet
+    align-items: center;
+  }
+
+  .add-products-form,
+  .existing-products-container {
+    width: 80%; // Ajusta el ancho de los contenedores en pantallas de tablet
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    width: 100%;
+  }
+
+  .section h2 {
+    font-size: 1.2em;
+  }
+
+  .section li {
+    align-items: center; // Centra los elementos en modo móvil
+  }
+
+  .section li span {
+    text-align: center; // Centra el texto en modo móvil
+  }
+
+  .section li span button {
+    font-size: 0.8em;
+    padding: 4px 8px;
+  }
+
+  .add-products-container {
+    flex-direction: column; // Apila los contenedores verticalmente en pantallas de móvil
+    align-items: center;
+  }
+
+  .add-products-form,
+  .existing-products-container {
+    width: 100%; // Ajusta el ancho de los contenedores en pantallas de móvil
+  }
+}
