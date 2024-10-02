@@ -14,7 +14,7 @@ const Products = () => {
     category: '',
     stock: '',
     image: '',
-    size: ''
+    product_size: '' // Cambiar el nombre del campo a product_size
   });
   const [productToEdit, setProductToEdit] = useState(null);
   const [imageFile, setImageFile] = useState(null);
@@ -56,7 +56,7 @@ const Products = () => {
       }
       const addedProduct = await addProduct({ ...newProduct, image: imageUrl });
       setProducts([...products, addedProduct]);
-      setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '', size: '' });
+      setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '', product_size: '' });
       setImageFile(null);
     } catch (error) {
       console.error('Error adding product', error);
@@ -81,7 +81,7 @@ const Products = () => {
       const updatedProduct = await updateProduct(productToEdit.id, { ...newProduct, image: imageUrl });
       setProducts(products.map(product => (product.id === productToEdit.id ? updatedProduct : product)));
       setProductToEdit(null);
-      setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '', size: '' });
+      setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '', product_size: '' });
       setImageFile(null);
       // Refrescar la lista de productos después de actualizar
       const response = await axios.get('https://vikingsdb.up.railway.app/products/');
@@ -112,6 +112,7 @@ const Products = () => {
         <ul>
           <li className="header">
             <span>Imagen</span>
+            <span>ID</span>
             <span>Nombre</span>
             <span>Descripción</span>
             <span>Precio</span>
@@ -129,12 +130,13 @@ const Products = () => {
                   'No Image'
                 )}
               </span>
+              <span>{product.id}</span>
               <span>{product.name}</span>
               <span>{truncateDescription(product.description)}</span>
               <span>{product.price}</span>
               <span>{product.category}</span>
               <span>{product.stock}</span>
-              <span>{product.size}</span>
+              <span>{product.product_size}</span> {/* Cambiar el nombre del campo a product_size */}
               <span>
                 <button className={`edit-button ${productToEdit && productToEdit.id === product.id ? 'hover' : ''}`}
                 onClick={() => handleEditProduct(product)}>Editar</button>
@@ -158,7 +160,7 @@ const Products = () => {
           <label>Stock:</label>
           <input type="number" name="stock" value={newProduct.stock} onChange={handleChange} />
           <label>Talla:</label>
-          <input type="text" name="size" value={newProduct.size} onChange={handleChange} />
+          <input type="text" name="product_size" value={newProduct.product_size} onChange={handleChange} /> {/* Cambiar el nombre del campo a product_size */}
           <label>Imagen:</label>
           <input type="file" name="image" onChange={handleImageChange} />
           <button type="button" onClick={productToEdit ? handleUpdateProduct : handleAddProduct}>

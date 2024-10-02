@@ -16,7 +16,7 @@ const Orders = () => {
   });
   const [orderToEdit, setOrderToEdit] = useState(null);
   const [products, setProducts] = useState([]); // Estado para los productos de un pedido
-  const [newProduct, setNewProduct] = useState({ product_id: '', quantity: '', size: '' }); // Estado para un nuevo producto
+  const [newProduct, setNewProduct] = useState({ product_id: '', quantity: '', order_size: '' }); // Estado para un nuevo producto
   const [selectedOrderId, setSelectedOrderId] = useState(null); // Estado para el pedido seleccionado
   const [tempProducts, setTempProducts] = useState([]); // Estado para los productos temporales añadidos
   const [hoveredOrderId, setHoveredOrderId] = useState(null); // Estado para el efecto de hover del botón "Ver Productos"
@@ -117,7 +117,7 @@ const Orders = () => {
           order_id: addedOrder.id,
           product_id: product.product_id,
           quantity: product.quantity,
-          size: product.size, // Añadir el campo size
+          order_size: product.order_size,
           price: price,
           total: total
         }, {
@@ -134,8 +134,9 @@ const Orders = () => {
         products: tempProducts
       });
 
-      // Actualizar el estado de los pedidos
-      setOrders([...orders, updatedOrder]);
+      setOrders(orders.map(o => (o.id === addedOrder.id ? updatedOrder : o)));
+      setOrderToEdit(updatedOrder);
+      setNewOrder({ ...newOrder, total_price: newTotal });
 
       setNewOrder({ user_id: '', order_date: '', total_price: 0, status: '', products: [] });
       setTempProducts([]); // Limpiar productos temporales
@@ -190,7 +191,7 @@ const Orders = () => {
           order_id: orderToEdit.id,
           product_id: product.product_id,
           quantity: product.quantity,
-          size: product.size, // Añadir el campo size
+          order_size: product.order_size,
           price: price,
           total: total
         }, {
@@ -204,6 +205,7 @@ const Orders = () => {
           total: total
         };
       }));
+  
 
       // Actualizar el pedido
       const updatedOrder = await updateOrder(orderToEdit.id, {
@@ -243,13 +245,13 @@ const Orders = () => {
         const productWithDetails = { ...newProduct, ...productDetails };
         const updatedTempProducts = [...tempProducts, productWithDetails];
         setTempProducts(updatedTempProducts);
-        setNewProduct({ product_id: '', quantity: '', size: '' });
+        setNewProduct({ product_id: '', quantity: '', order_size: '' });
 
         // Calcular el nuevo total del pedido incluyendo productos existentes y temporales
         const newTotal = [...products, ...updatedTempProducts].reduce((acc, product) => acc + (product.price * product.quantity), 0);
         setNewOrder({ ...newOrder, total_price: newTotal });
 
-        // No actualizar el pedido en el servidor aquí
+  
       } else {
         console.error('Product not found');
       }
@@ -290,7 +292,7 @@ const Orders = () => {
         products: updatedProducts.map(product => ({
           product_id: product.product_id,
           quantity: product.quantity,
-          size: product.size, // Añadir el campo size
+          order_size: product.order_size,
           price: product.price,
           total: product.price * product.quantity
         }))
@@ -353,7 +355,7 @@ const Orders = () => {
                         <span>ID: {product.product_id}</span>
                         <span>Nombre: {product.name}</span>
                         <span>Cantidad: {product.quantity}</span>
-                        <span>Talla: {product.size}</span>
+                        <span>Talla: {product.order_size}</span>
                         <span>Precio: {product.price} €</span>
                         <button className='delete-button-products' onClick={() => handleDeleteProduct(order, product.product_id)}>Eliminar</button>
                         {/* Aquí puedes agregar funcionalidad para editar el producto */}
@@ -384,7 +386,7 @@ const Orders = () => {
                     <span>ID: {product.product_id}</span>
                     <span>Nombre: {product.name}</span>
                     <span>Cantidad: {product.quantity}</span>
-                    <span>Talla: {product.size}</span>
+                    <span>Talla: {product.order_size}</span>
                     <span>Precio: {product.price}€</span>  
                   </li>
                 ))}
@@ -394,7 +396,7 @@ const Orders = () => {
               <label>Cantidad:</label>
               <input type="number" name="quantity" value={newProduct.quantity} onChange={handleProductChange} />
               <label>Tamaño:</label>
-              <input type="text" name="size" value={newProduct.size} onChange={handleProductChange} />
+              <input type="text" name="order_size" value={newProduct.order_size} onChange={handleProductChange} />
               <button type="button" onClick={handleAddProduct}>Añadir Producto</button>
             </div>
           </div>
