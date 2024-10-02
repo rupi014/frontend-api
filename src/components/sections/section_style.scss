@@ -260,6 +260,18 @@
     border: 1px solid #ccc; 
   }
 
+  .role-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #FFCA00;
+    font-weight: bold;
+    margin-top: 50px;
+    font-size: 1.5em;
+  }
+
+
   /* Media Queries */
 @media (max-width: 768px) {
   .section {

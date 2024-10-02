@@ -98,59 +98,66 @@ const Staff = () => {
     setImageFile(e.target.files[0]);
   };
 
+  // Agrupar miembros del staff por rol
+  const groupedStaff = staff.reduce((acc, member) => {
+    const { role } = member;
+    if (!acc[role]) {
+      acc[role] = [];
+    }
+    acc[role].push(member);
+    return acc;
+  }, {});
+
   return (
     <div className="container">
-        <div className="section">
+      <div className="section">
         <h2>Staff</h2>
         <ul>
-            <li className="header">
-            <span>Imagen</span>
-            <span>Nombre</span>
-            <span>Rol</span>
-            <span>Biografía</span>
-            <span>Twitter</span>
-            <span>Acciones</span>
-            </li>
-            {staff.map((member) => (
-            <li key={member.id}>
-              <span>
-                  {member.image ? (
-                    <img src={member.image} alt={member.name} style={{ width: '50px', height: '50px' }} />
-                  ) : (
-                    'No Image'
-                  )}
-                </span>
-                <span>{member.name}</span>
-                <span>{member.role}</span>
-                <span>{member.bio}</span>
-                <span>{member.twitter}</span>
-                <span>
+          {Object.keys(groupedStaff).map((role) => (
+            <React.Fragment key={role}>
+              <span className='role-header'>{role}</span>
+              {groupedStaff[role].map((member) => (
+                <li key={member.id}>
+                  <span>
+                    {member.image ? (
+                      <img src={member.image} alt={member.name} style={{ width: '50px', height: '50px' }} />
+                    ) : (
+                      'No Image'
+                    )}
+                  </span>
+                  <span>{member.name}</span>
+                  <span>{member.role}</span>
+                  <span>{member.bio}</span>
+                  <span>{member.twitter}</span>
+                  <span>
                     <button className={`edit-button ${staffToEdit && staffToEdit.id === member.id ? 'hover' : ''}`}
-                    onClick={() => handleEditStaff(member)}>Editar</button>
+                      onClick={() => handleEditStaff(member)}>Editar</button>
                     <button className='delete-button' onClick={() => handleDelete(member.id)}>Eliminar</button>
-                </span>
-            </li>
-            ))}
+                  </span>
+                </li>
+              ))}
+            </React.Fragment>
+          ))}
         </ul>
-        </div>
-        <div className="section">
-          <h2>{staffToEdit ? 'Editar Miembro del Staff' : 'Añadir Miembro del Staff'}</h2>
-          <form className="create-form">
-            <label>Nombre:</label>
-            <input type="text" name="name" value={newStaff.name} onChange={handleChange} />
-            <label>Rol:</label>
-            <input type="text" name="role" value={newStaff.role} onChange={handleChange} />
-            <label>Biografía:</label>
-            <input type="text" name="bio" value={newStaff.bio} onChange={handleChange} />
-            <label>Twitter:</label>
-            <input type="text" name="twitter" value={newStaff.twitter} onChange={handleChange} />
-            <label>Imagen:</label>
-            <input type="file" name="image" onChange={handleImageChange} />
-            <button type="button" onClick={staffToEdit ? handleUpdateStaff : handleAddStaff}>
-              {staffToEdit ? 'Actualizar' : 'Crear'}
-            </button>
-          </form>
-        </div>
+      </div>
+      <div className="section">
+        <h2>{staffToEdit ? 'Editar Miembro del Staff' : 'Añadir Miembro del Staff'}</h2>
+        <form className="create-form">
+          <label>Nombre:</label>
+          <input type="text" name="name" value={newStaff.name} onChange={handleChange} />
+          <label>Rol:</label>
+          <input type="text" name="role" value={newStaff.role} onChange={handleChange} />
+          <label>Biografía:</label>
+          <input type="text" name="bio" value={newStaff.bio} onChange={handleChange} />
+          <label>Twitter:</label>
+          <input type="text" name="twitter" value={newStaff.twitter} onChange={handleChange} />
+          <label>Imagen:</label>
+          <input type="file" name="image" onChange={handleImageChange} />
+          <button type="button" onClick={staffToEdit ? handleUpdateStaff : handleAddStaff}>
+            {staffToEdit ? 'Actualizar' : 'Crear'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
