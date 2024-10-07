@@ -1,0 +1,196 @@
+.users-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  min-height: 100vh; /* Asegura que el fondo cubra toda la pantalla */
+  width: 100%;
+  box-sizing: border-box;
+  background-image: url('../../assets/images/background.webp');
+  background-size: cover;
+  background-position: center;
+}
+
+h2 {
+  font-size: 2em;
+  text-align: center;
+  color: #FFCA00;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 20%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #FFCA00;
+  border-radius: 5px;
+}
+
+table {
+  width: 60%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #FFCA00;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #2f2e2e;
+  color: #FFCA00;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:nth-child(odd) {
+  background-color: #e9e9e9;
+}
+
+tr:hover {
+  background-color: #ddd;
+}
+
+td span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
+
+.edit-button {
+  padding: 10px;
+  margin-right: 10px;
+}
+
+.edit-button:hover {
+  background-color: darkgreen;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: red;
+  color: white;
+}
+
+.edit-section {
+  width: 100%;
+  max-width: 800px; /* Limita el ancho máximo de la sección de edición */
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.edit-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.edit-form input {
+  width: calc(100% - 20px);
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.update-button {
+  padding: 10px 20px;
+  background-color: #1a1919;
+  color: #FFCA00;
+  font-size: 1.2rem;  
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.update-button:hover {
+  background-color: #FFCA00;
+  color: #1a1919;
+}
+
+
+// Media Queries
+@media (max-width: 768px) {
+  .users-container {
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 1.8em;
+  }
+
+  .search-input {
+    width: 60%;
+  }
+
+  table {
+    width: 90%;
+  }
+
+  .edit-button {
+    padding: 8px;
+    margin-right: 8px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .users-container {
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 1.5em;
+  }
+
+  .search-input {
+    width: 80%;
+  }
+
+  table {
+    width: 100%;
+    border: none; /* Elimina los bordes de la tabla */
+  }
+
+  thead {
+    display: none; /* Oculta el encabezado de la tabla */
+  }
+
+  tr {
+    display: block; /* Hace que cada fila sea un bloque */
+    margin-bottom: 10px; /* Añade espacio entre las filas */
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between; /* Alinea el nombre del campo y el valor */
+    align-items: center;
+    padding: 8px;
+    border: none; /* Elimina los bordes de las celdas */
+    border-bottom: 1px solid #ddd; /* Añade un borde inferior */
+  }
+
+  td::before {
+    content: attr(data-label); /* Usa el atributo data-label para mostrar el nombre del campo */
+    font-weight: bold;
+    margin-right: 10px;
+    text-align: left;
+  }
+
+  .edit-button {
+    padding: 6px;
+    margin-right: -200px;
+    font-size: 0.9rem; /* Ajusta el tamaño de la fuente si es necesario */
+  }
+}
