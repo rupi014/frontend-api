@@ -62,8 +62,15 @@ const Staff = () => {
   };
 
   const handleEditStaff = (member) => {
-    setStaffToEdit(member);
-    setNewStaff(member);
+    if (staffToEdit && staffToEdit.id === member.id) {
+      // Si ya estamos editando este miembro, salir del modo edición
+      setStaffToEdit(null);
+      setNewStaff({ name: '', role: '', bio: '', twitter: '', image: '' });
+    } else {
+      // Entrar en modo edición para el miembro seleccionado
+      setStaffToEdit(member);
+      setNewStaff(member);
+    }
   };
 
   const handleUpdateStaff = async () => {
@@ -131,7 +138,9 @@ const Staff = () => {
                   <span>{member.twitter}</span>
                   <span>
                     <button className={`edit-button ${staffToEdit && staffToEdit.id === member.id ? 'hover' : ''}`}
-                      onClick={() => handleEditStaff(member)}>Editar</button>
+                      onClick={() => handleEditStaff(member)}>
+                      {staffToEdit && staffToEdit.id === member.id ? 'Cancelar' : 'Editar'}
+                    </button>
                     <button className='delete-button' onClick={() => handleDelete(member.id)}>Eliminar</button>
                   </span>
                 </li>

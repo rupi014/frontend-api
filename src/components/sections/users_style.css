@@ -1,0 +1,114 @@
+.users-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    background-image: url('../../assets/images/background.webp');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .users-container input {
+    width: 40%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+  }
+  
+  .users-container button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #FFCA00;
+    background-color: #2f2e2e;
+    border: 1px solid #FFCA00;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .users-container button:hover {
+    background-color: #037403;
+    color: white;
+  }
+  
+  .users-container table {
+    width: 80%;
+    margin-top: 20px;
+    border-collapse: collapse;
+  }
+  
+  .users-container th, .users-container td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .users-container th {
+    background-color: #2f2e2e;
+    color: #FFCA00;
+  }
+  
+  .users-container tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .users-container tr:nth-child(odd) {
+    background-color: #e9e9e9;
+  }
+  
+  /* Media Queries */
+  @media (max-width: 768px) {
+    .users-container input {
+      width: 90%;
+    }
+  
+    .users-container table {
+      width: 90%;
+    }
+  
+    .users-container h1 {
+      font-size: 1.5em;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .users-container input {
+      width: 100%;
+    }
+  
+    .users-container table {
+      width: 100%;
+    }
+  
+    .users-container thead {
+      display: none; /* Oculta el encabezado de la tabla */
+    }
+  
+    .users-container th, .users-container td {
+      display: block; /* Hace que cada celda sea un bloque */
+      text-align: left; /* Alinea el texto a la izquierda */
+      padding: 10px; /* Reduce el padding para pantallas pequeñas */
+      font-size: 0.9em; /* Reduce el tamaño de la fuente para pantallas pequeñas */
+    }
+  
+    .users-container tr {
+      display: block; /* Hace que cada fila sea un bloque */
+      margin-bottom: 10px; /* Añade espacio entre las filas */
+    }
+  
+    .users-container td::before {
+      content: attr(data-label); /* Usa el atributo data-label para mostrar el nombre del campo */
+      font-weight: bold;
+      display: inline-block;
+      width: 100px; /* Ancho fijo para el nombre del campo */
+    }
+  
+    .users-container h1 {
+      font-size: 1.2em;
+    }
+  }

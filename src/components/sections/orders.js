@@ -161,34 +161,41 @@ const Orders = () => {
     }
   };
 
-  const handleEditOrder = async (order) => {
-    setOrderToEdit(order);
-    setNewOrder({
-      ...order,
-      order_date: order.order_date.split('T')[0],
-      products: order.products || [],
-      total_price: order.total_price || 0
-    });
-
-    // Obtener productos del pedido
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`https://vikingsdb.up.railway.app/products_order/${order.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+  const handleEditOrder = (order) => {
+    if (orderToEdit && orderToEdit.id === order.id) {
+      // Si ya estamos editando este pedido, salir del modo edición
+      setOrderToEdit(null);
+      setNewOrder({ user_id: '', order_date: '', total_price: 0, status: '', products: [] });
+    } else {
+      // Entrar en modo edición para el pedido seleccionado
+      setOrderToEdit(order);
+      setNewOrder({
+        ...order,
+        order_date: order.order_date.split('T')[0],
+        products: order.products || [],
+        total_price: order.total_price || 0
       });
-      const productsWithDetails = await Promise.all(response.data.map(async (product) => {
-        const productDetails = await fetchProductDetails(product.product_id);
-        return {
-          ...product,
-          ...productDetails
-        };
-      }));
-      setProducts(productsWithDetails);
-      setSelectedOrderId(order.id); // Actualizar el pedido seleccionado
-    } catch (error) {
-      console.error('Error fetching products data', error);
+
+      // Obtener productos del pedido
+      try {
+        const token = localStorage.getItem('token');
+        const response = axios.get(`https://vikingsdb.up.railway.app/products_order/${order.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const productsWithDetails = Promise.all(response.data.map(async (product) => {
+          const productDetails = await fetchProductDetails(product.product_id);
+          return {
+            ...product,
+            ...productDetails
+          };
+        }));
+        setProducts(productsWithDetails);
+        setSelectedOrderId(order.id); // Actualizar el pedido seleccionado
+      } catch (error) {
+        console.error('Error fetching products data', error);
+      }
     }
   };
 
@@ -370,7 +377,7 @@ const Orders = () => {
                     className={`edit-button ${orderToEdit && orderToEdit.id === order.id ? 'hover' : ''}`}
                     onClick={() => handleEditOrder(order)}
                   >
-                    Editar
+                    {orderToEdit && orderToEdit.id === order.id ? 'Cancelar' : 'Editar'}
                   </button>
                   <button className='delete-button' onClick={() => handleDelete(order.id)}>Eliminar</button>
                 </span>

@@ -62,8 +62,15 @@ const Players = () => {
   };
 
   const handleEditPlayer = (player) => {
-    setPlayerToEdit(player);
-    setNewPlayer(player);
+    if (playerToEdit && playerToEdit.id === player.id) {
+      // Si ya estamos editando este jugador, salir del modo edición
+      setPlayerToEdit(null);
+      setNewPlayer({ name: '', role: '', bio: '', twitter: '', image: '' });
+    } else {
+      // Entrar en modo edición para el jugador seleccionado
+      setPlayerToEdit(player);
+      setNewPlayer(player);
+    }
   };
 
   const handleUpdatePlayer = async () => {
@@ -125,7 +132,9 @@ const Players = () => {
               <span>{player.twitter}</span>
               <span>
                 <button className={`edit-button ${playerToEdit && playerToEdit.id === player.id ? 'hover' : ''}`}
-                onClick={() => handleEditPlayer(player)}>Editar</button>
+                onClick={() => handleEditPlayer(player)}>
+                  {playerToEdit && playerToEdit.id === player.id ? 'Cancelar' : 'Editar'}
+                </button>
                 <button className='delete-button' onClick={() => handleDelete(player.id)}>Eliminar</button>
               </span>
             </li>

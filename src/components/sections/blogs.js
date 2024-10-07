@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Editor } from '@tinymce/tinymce-react';
 import './section_style.scss';
 import { deleteBlog } from '../functions/delete_functions';
 import { addBlog } from '../functions/create_functions';
@@ -62,14 +63,21 @@ const Blogs = () => {
   };
 
   const handleEditBlog = (blog) => {
-    setBlogToEdit(blog);
-    setNewBlog({
-      title: blog.title || '',
-      content: blog.content || '',
-      date: blog.date ? blog.date.split('T')[0] : '',
-      author_id: blog.author_id || '',
-      image: blog.image || ''
-    });
+    if (blogToEdit && blogToEdit.id === blog.id) {
+      // Si ya estamos editando este blog, salir del modo edición
+      setBlogToEdit(null);
+      setNewBlog({ title: '', content: '', date: '', author_id: '', image: '' });
+    } else {
+      // Entrar en modo edición para el blog seleccionado
+      setBlogToEdit(blog);
+      setNewBlog({
+        title: blog.title || '',
+        content: blog.content || '',
+        date: blog.date ? blog.date.split('T')[0] : '',
+        author_id: blog.author_id || '',
+        image: blog.image || ''
+      });
+    }
   };
 
   const handleUpdateBlog = async () => {
@@ -98,6 +106,10 @@ const Blogs = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewBlog({ ...newBlog, [name]: value });
+  };
+
+  const handleContentChange = (content) => {
+    setNewBlog({ ...newBlog, content });
   };
 
   const handleImageChange = (e) => {
@@ -137,7 +149,9 @@ const Blogs = () => {
               <span>{blog.author_id}</span>
               <span>
                 <button className={`edit-button ${blogToEdit && blogToEdit.id === blog.id ? 'hover' : ''}`}
-                onClick={() => handleEditBlog(blog)}>Editar</button>
+                  onClick={() => handleEditBlog(blog)}>
+                  {blogToEdit && blogToEdit.id === blog.id ? 'Cancelar' : 'Editar'}
+                </button>
                 <button className='delete-button' onClick={() => handleDelete(blog.id)}>Eliminar</button>
               </span>
             </li>
@@ -150,7 +164,25 @@ const Blogs = () => {
           <label>Título:</label>
           <input type="text" name="title" value={newBlog.title} onChange={handleChange} />
           <label>Contenido:</label>
-          <textarea className='textarea' name="content" value={newBlog.content} onChange={handleChange} rows="6" />
+          <Editor
+            apiKey="8hyhnh1u0q899xxtr0m8zplw4s64u66kswnewdj3smav0kj1" // Reemplaza con tu clave de API de TinyMCE
+            value={newBlog.content}
+            init={{
+              height: 300,
+              width: '100%',
+              menubar: false,
+              plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+              ],
+              toolbar:
+                `undo redo | formatselect | bold italic backcolor | 
+                alignleft aligncenter alignright alignjustify | 
+              bullist numlist outdent indent | removeformat | help`
+            }}
+            onEditorChange={handleContentChange}
+          />
           <label>Fecha:</label>
           <input type="date" name="date" value={newBlog.date} onChange={handleChange} />
           <label>Autor:</label>

@@ -21,6 +21,7 @@ const Status = () => {
         <Link to="/sections/players" className="button">JUGADORES</Link>
         <Link to="/sections/products" className="button">PRODUCTOS</Link>
         <Link to="/sections/orders" className="button">PEDIDOS</Link>
+        <Link to="/sections/users" className="button">USUARIOS</Link>
         <Link to="/sections/blogs" className="button">BLOGS</Link>
       </div>
     </div>

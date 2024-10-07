@@ -9,6 +9,7 @@ import Players from './components/sections/players';
 import Products from './components/sections/products';
 import Orders from './components/sections/orders';
 import Blogs from './components/sections/blogs';
+import Users from './components/sections/users';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/sections/products" element={<Products />} />
         <Route path="/sections/orders" element={<Orders />} />
         <Route path="/sections/blogs" element={<Blogs />} />
+        <Route path="/sections/users" element={<Users />} />
       </Routes>
     </Router>
   );

@@ -64,8 +64,15 @@ const Products = () => {
   };
 
   const handleEditProduct = (product) => {
-    setProductToEdit(product);
-    setNewProduct(product);
+    if (productToEdit && productToEdit.id === product.id) {
+      // Si ya estamos editando este producto, salir del modo edición
+      setProductToEdit(null);
+      setNewProduct({ name: '', description: '', price: '', category: '', stock: '', image: '', product_size: '' });
+    } else {
+      // Entrar en modo edición para el producto seleccionado
+      setProductToEdit(product);
+      setNewProduct(product);
+    }
   };
 
   const handleUpdateProduct = async () => {
@@ -138,8 +145,10 @@ const Products = () => {
               <span>{product.stock}</span>
               <span>{product.product_size}</span> {/* Cambiar el nombre del campo a product_size */}
               <span>
-                <button className={`edit-button ${productToEdit && productToEdit.id === product.id ? 'hover' : ''}`}
-                onClick={() => handleEditProduct(product)}>Editar</button>
+              <button className={`edit-button ${productToEdit && productToEdit.id === product.id ? 'hover' : ''}`}
+                onClick={() => handleEditProduct(product)}>
+                {productToEdit && productToEdit.id === product.id ? 'Cancelar' : 'Editar'}
+              </button>
                 <button className='delete-button' onClick={() => handleDelete(product.id)}>Eliminar</button>
               </span>
             </li>
