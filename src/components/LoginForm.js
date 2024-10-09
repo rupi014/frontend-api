@@ -16,8 +16,24 @@ const LoginForm = () => {
       params.append('username', username);
       params.append('password', password);
 
-      const response = await axios.post('https://vikingsdb.up.railway.app/token', params);
-      localStorage.setItem('token', response.data.access_token);
+      const tokenResponse = await axios.post('https://vikingsdb.up.railway.app/token', params);
+      const accessToken = tokenResponse.data.access_token;
+
+      // Realiza una solicitud para obtener la información del usuario
+      const userResponse = await axios.get('https://vikingsdb.up.railway.app/users/me', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+
+      const { role } = userResponse.data;
+
+      if (role !== 'admin') {
+        setErrorMessage('Acceso denegado: solo los administradores pueden iniciar sesión');
+        return;
+      }
+
+      localStorage.setItem('token', accessToken);
       localStorage.setItem('userName', username);
       console.log('Inicio de sesión exitoso');
       navigate('/status', { state: { isLoggedIn: true } });
