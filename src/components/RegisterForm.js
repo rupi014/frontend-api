@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
-import './RegisterForm.scss'; // Importa la hoja de estilos SCSS
+import { useNavigate } from 'react-router-dom';
+import './RegisterForm.scss';
 
 const RegisterForm = () => {
   const [username, setUsername] = useState('');
@@ -9,8 +9,9 @@ const RegisterForm = () => {
   const [email, setEmail] = useState('');
   const [telephone, setTelephone] = useState('');
   const [address, setAddress] = useState('');
-  const navigate = useNavigate(); // Usa useNavigate
+  const navigate = useNavigate();
 
+  // Registrar un nuevo usuario
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -22,7 +23,7 @@ const RegisterForm = () => {
         address,
       });
       console.log('Registro exitoso', response.data);
-      navigate('/login'); // Redirige a la página de login
+      navigate('/login');
     } catch (error) {
       if (error.response) {
         console.error('Error al registrar', error.response.data);
@@ -38,7 +39,7 @@ const RegisterForm = () => {
         <h2>Registro</h2> 
         <div>
           <label>Usuario:</label>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} autocomplete="username" />
+          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} autocomplete="name" />
         </div>
         <div>
           <label>Contraseña:</label>

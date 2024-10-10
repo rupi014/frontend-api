@@ -14,11 +14,12 @@ const Products = () => {
     category: '',
     stock: '',
     image: '',
-    product_size: '' // Cambiar el nombre del campo a product_size
+    product_size: ''
   });
   const [productToEdit, setProductToEdit] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
+  // Obtener los productos
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -32,6 +33,7 @@ const Products = () => {
     fetchProducts();
   }, []);
 
+  // Eliminar un producto
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este producto?");
     if (!confirmDelete) return;
@@ -44,6 +46,7 @@ const Products = () => {
     }
   };
 
+  // Añadir un producto
   const handleAddProduct = async () => {
     try {
       let imageUrl = '';
@@ -63,6 +66,7 @@ const Products = () => {
     }
   };
 
+  // Editar un producto
   const handleEditProduct = (product) => {
     if (productToEdit && productToEdit.id === product.id) {
       // Si ya estamos editando este producto, salir del modo edición
@@ -75,13 +79,14 @@ const Products = () => {
     }
   };
 
+  // Actualizar un producto
   const handleUpdateProduct = async () => {
     try {
       let imageUrl = newProduct.image;
       if (imageFile) {
         const formData = new FormData();
         formData.append('file', imageFile);
-        formData.append('upload_preset', 'ml_default'); // Asegúrate de que 'ml_default' sea correcto
+        formData.append('upload_preset', 'ml_default');
         const response = await axios.post('https://api.cloudinary.com/v1_1/doo3lslbw/image/upload', formData);
         imageUrl = response.data.secure_url;
       }
@@ -143,7 +148,7 @@ const Products = () => {
               <span>{product.price}</span>
               <span>{product.category}</span>
               <span>{product.stock}</span>
-              <span>{product.product_size}</span> {/* Cambiar el nombre del campo a product_size */}
+              <span>{product.product_size}</span>
               <span>
               <button className={`edit-button ${productToEdit && productToEdit.id === product.id ? 'hover' : ''}`}
                 onClick={() => handleEditProduct(product)}>
@@ -169,7 +174,7 @@ const Products = () => {
           <label>Stock:</label>
           <input type="number" name="stock" value={newProduct.stock} onChange={handleChange} />
           <label>Talla:</label>
-          <input type="text" name="product_size" value={newProduct.product_size} onChange={handleChange} /> {/* Cambiar el nombre del campo a product_size */}
+          <input type="text" name="product_size" value={newProduct.product_size} onChange={handleChange} />
           <label>Imagen:</label>
           <input type="file" name="image" onChange={handleImageChange} />
           <button type="button" onClick={productToEdit ? handleUpdateProduct : handleAddProduct}>

@@ -18,6 +18,7 @@ const Blogs = () => {
   const [blogToEdit, setBlogToEdit] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
+  // Obtener los blogs  
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
@@ -31,6 +32,7 @@ const Blogs = () => {
     fetchBlogs();
   }, []);
 
+  // Eliminar un blog
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este blog?");
     if (!confirmDelete) return;
@@ -43,13 +45,14 @@ const Blogs = () => {
     }
   };
 
+  // Añadir un blog
   const handleAddBlog = async () => {
     try {
       let imageUrl = '';
       if (imageFile) {
         const formData = new FormData();
         formData.append('file', imageFile);
-        formData.append('upload_preset', 'ml_default'); // Asegúrate de que 'ml_default' sea correcto
+        formData.append('upload_preset', 'ml_default');
         const response = await axios.post('https://api.cloudinary.com/v1_1/doo3lslbw/image/upload', formData);
         imageUrl = response.data.secure_url;
       }
@@ -62,6 +65,7 @@ const Blogs = () => {
     }
   };
 
+  // Editar un blog
   const handleEditBlog = (blog) => {
     if (blogToEdit && blogToEdit.id === blog.id) {
       // Si ya estamos editando este blog, salir del modo edición
@@ -80,13 +84,14 @@ const Blogs = () => {
     }
   };
 
+  // Actualizar un blog
   const handleUpdateBlog = async () => {
     try {
       let imageUrl = newBlog.image;
       if (imageFile) {
         const formData = new FormData();
         formData.append('file', imageFile);
-        formData.append('upload_preset', 'ml_default'); // Asegúrate de que 'ml_default' sea correcto
+        formData.append('upload_preset', 'ml_default');
         const response = await axios.post('https://api.cloudinary.com/v1_1/doo3lslbw/image/upload', formData);
         imageUrl = response.data.secure_url;
       }
@@ -165,7 +170,7 @@ const Blogs = () => {
           <input type="text" name="title" value={newBlog.title} onChange={handleChange} />
           <label>Contenido:</label>
           <Editor
-            apiKey="8hyhnh1u0q899xxtr0m8zplw4s64u66kswnewdj3smav0kj1" // Reemplaza con tu clave de API de TinyMCE
+            apiKey="8hyhnh1u0q899xxtr0m8zplw4s64u66kswnewdj3smav0kj1"
             value={newBlog.content}
             init={{
               height: 300,

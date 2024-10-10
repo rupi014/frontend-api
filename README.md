@@ -1,1 +1,0 @@
-Con esta APP se puede acceder y editer la base de datos de la pagina web de "Vikings of the Rift"

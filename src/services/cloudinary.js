@@ -1,5 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
 
+// Configuracion de Cloudinary
+
    cloudinary.config({
      cloud_name: 'doo3lslbw',
      api_key: '451523848881555',

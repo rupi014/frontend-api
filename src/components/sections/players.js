@@ -17,6 +17,7 @@ const Players = () => {
   const [playerToEdit, setPlayerToEdit] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
+  // Obtener los jugadores
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
@@ -30,6 +31,7 @@ const Players = () => {
     fetchPlayers();
   }, []);
 
+  // Eliminar un jugador
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este jugador?");
     if (!confirmDelete) return;
@@ -42,6 +44,7 @@ const Players = () => {
     }
   };
 
+  // Añadir un jugador
   const handleAddPlayer = async () => {
     try {
       let imageUrl = '';
@@ -61,6 +64,7 @@ const Players = () => {
     }
   };
 
+  // Editar un jugador
   const handleEditPlayer = (player) => {
     if (playerToEdit && playerToEdit.id === player.id) {
       // Si ya estamos editando este jugador, salir del modo edición
@@ -73,6 +77,7 @@ const Players = () => {
     }
   };
 
+  // Actualizar un jugador
   const handleUpdatePlayer = async () => {
     try {
       let imageUrl = newPlayer.image;

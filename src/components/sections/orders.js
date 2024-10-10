@@ -10,18 +10,19 @@ const Orders = () => {
   const [newOrder, setNewOrder] = useState({
     user_id: '',
     order_date: '',
-    total_price: 0, // Inicializar el total del pedido en 0
+    total_price: 0,
     status: '',
-    products: [] // Añadir productos al nuevo pedido
+    products: []
   });
   const [orderToEdit, setOrderToEdit] = useState(null);
-  const [products, setProducts] = useState([]); // Estado para los productos de un pedido
-  const [newProduct, setNewProduct] = useState({ product_id: '', quantity: '', order_size: '' }); // Estado para un nuevo producto
-  const [selectedOrderId, setSelectedOrderId] = useState(null); // Estado para el pedido seleccionado
-  const [tempProducts, setTempProducts] = useState([]); // Estado para los productos temporales añadidos
-  const [hoveredOrderId, setHoveredOrderId] = useState(null); // Estado para el efecto de hover del botón "Ver Productos"
-  const [existingProducts, setExistingProducts] = useState([]); // Estado para los productos existentes
+  const [products, setProducts] = useState([]);
+  const [newProduct, setNewProduct] = useState({ product_id: '', quantity: '', order_size: '' });
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [tempProducts, setTempProducts] = useState([]);
+  const [hoveredOrderId, setHoveredOrderId] = useState(null);
+  const [existingProducts, setExistingProducts] = useState([]);
 
+  // Obtener los pedidos
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -37,6 +38,7 @@ const Orders = () => {
       }
     };
 
+    // Obtener los productos existentes
     const fetchExistingProducts = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -55,6 +57,7 @@ const Orders = () => {
     fetchExistingProducts();
   }, []);
 
+  // Obtener los detalles de un producto
   const fetchProductDetails = async (productId) => {
     try {
       const token = localStorage.getItem('token');
@@ -70,12 +73,13 @@ const Orders = () => {
     }
   };
 
+  // Obtener los productos de un pedido
   const fetchProducts = async (orderId) => {
     if (selectedOrderId === orderId) {
       // Si el pedido ya está seleccionado, cerrar la lista de productos
       setSelectedOrderId(null);
       setProducts([]);
-      setHoveredOrderId(null); // Quitar el efecto de hover
+      setHoveredOrderId(null);
     } else {
       try {
         const token = localStorage.getItem('token');
@@ -93,7 +97,7 @@ const Orders = () => {
         }));
         setProducts(productsWithDetails);
         setSelectedOrderId(orderId); // Actualizar el pedido seleccionado
-        setHoveredOrderId(orderId); // Aplicar el efecto de hover
+        setHoveredOrderId(orderId);
       } catch (error) {
         console.error('Error fetching products data', error);
       }
@@ -125,7 +129,7 @@ const Orders = () => {
       // Añadir productos temporales al nuevo pedido mediante el endpoint
       let newTotal = 0;
       await Promise.all(tempProducts.map(async (product) => {
-        const price = product.price; // Asumimos que el precio ya está en los detalles del producto
+        const price = product.price;
         const total = price * product.quantity;
         newTotal += total;
 
@@ -155,7 +159,7 @@ const Orders = () => {
       setNewOrder({ ...newOrder, total_price: newTotal });
 
       setNewOrder({ user_id: '', order_date: '', total_price: 0, status: '', products: [] });
-      setTempProducts([]); // Limpiar productos temporales
+      setTempProducts([]);
     } catch (error) {
       console.error('Error adding order', error);
     }
@@ -192,7 +196,7 @@ const Orders = () => {
           };
         }));
         setProducts(productsWithDetails);
-        setSelectedOrderId(order.id); // Actualizar el pedido seleccionado
+        setSelectedOrderId(order.id);
       } catch (error) {
         console.error('Error fetching products data', error);
       }
@@ -206,7 +210,7 @@ const Orders = () => {
 
       // Añadir productos temporales al pedido mediante el endpoint y calcular su total
       const addedProducts = await Promise.all(tempProducts.map(async (product) => {
-        const price = product.price; // Asumimos que el precio ya está en los detalles del producto
+        const price = product.price;
         const total = price * product.quantity;
         newTotal += total;
 
@@ -241,11 +245,11 @@ const Orders = () => {
       setOrders(orders.map(order => (order.id === orderToEdit.id ? updatedOrder : order)));
       setOrderToEdit(null);
       setNewOrder({ user_id: '', order_date: '', total_price: newTotal, status: '', products: [] });
-      setTempProducts([]); // Limpiar productos temporales
+      setTempProducts([]);
 
       // Actualizar la lista de productos del pedido
       setProducts([...products, ...addedProducts]);
-      setSelectedOrderId(updatedOrder.id); // Asegurarse de que el pedido actualizado esté seleccionado
+      setSelectedOrderId(updatedOrder.id);
     } catch (error) {
       console.error('Error updating order', error);
     }
@@ -276,7 +280,7 @@ const Orders = () => {
         setTempProducts(updatedTempProducts);
         setNewProduct({ product_id: '', quantity: '', order_size: '' });
 
-        // Calcular el nuevo total del pedido incluyendo productos existentes y temporales
+        // Calcula el nuevo total del pedido incluyendo productos existentes y temporales
         const newTotal = [...products, ...updatedTempProducts].reduce((acc, product) => acc + (product.price * product.quantity), 0);
         setNewOrder({ ...newOrder, total_price: newTotal });
 
@@ -292,7 +296,7 @@ const Orders = () => {
     const updatedTempProducts = tempProducts.filter((_, i) => i !== index);
     setTempProducts(updatedTempProducts);
   
-    // Calcular el nuevo total del pedido incluyendo productos existentes y temporales
+  
     const newTotal = [...products, ...updatedTempProducts].reduce((acc, product) => acc + (product.price * product.quantity), 0);
     setNewOrder({ ...newOrder, total_price: newTotal });
   };
@@ -395,7 +399,6 @@ const Orders = () => {
                         <span>Talla: {product.order_size}</span>
                         <span>Precio: {product.price} €</span>
                         <button className='delete-button-products' onClick={() => handleDeleteProduct(order, product.product_id)}>Eliminar</button>
-                        {/* Aquí puedes agregar funcionalidad para editar el producto */}
                       </li>
                     ))}
                   </ul>

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './status.scss';
 
+// Pagina de inicio
 const Status = () => {
   const [userName, setUserName] = useState('');
 
+  // Obtener el nombre del usuario almacenado en el localStorage
   useEffect(() => {
     const storedUserName = localStorage.getItem('userName');
     if (storedUserName) {

@@ -19,6 +19,7 @@ const Users = () => {
     return localStorage.getItem('token');
   };
 
+  // Buscar un usuario  
   const handleSearch = async () => {
     try {
       const token = getAuthToken();
@@ -45,6 +46,7 @@ const Users = () => {
     }
   };
 
+  // Eliminar un usuario
   const handleDeleteUser = async (id) => {
     const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
     if (!confirmDelete) return;
@@ -68,6 +70,7 @@ const Users = () => {
     }
   };
 
+  // Editar un usuario
   const handleEditUser = (user) => {
     if (userToEdit && userToEdit.id === user.id) {
       setUserToEdit(null);
@@ -78,6 +81,7 @@ const Users = () => {
     }
   };
 
+  // Actualizar un usuario
   const handleUpdateUser = async () => {
     try {
       const token = getAuthToken();

@@ -6,9 +6,10 @@ import './LoginForm.scss';
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // Estado para el mensaje de error
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
+  // Iniciar sesión
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -28,6 +29,7 @@ const LoginForm = () => {
 
       const { role } = userResponse.data;
 
+      // Verificar si el usuario tiene permisos de administrador
       if (role !== 'admin') {
         setErrorMessage('Acceso denegado: solo los administradores pueden iniciar sesión');
         return;
@@ -40,12 +42,12 @@ const LoginForm = () => {
     } catch (error) {
       if (error.response) {
         if (error.response.status === 401) {
-          setErrorMessage('Usuario // Contraseña incorrecto'); // Error de autenticación
+          setErrorMessage('Usuario // Contraseña incorrecto');
         } else {
-          setErrorMessage('No fue posible conectar al servidor'); // Otro error del servidor
+          setErrorMessage('No fue posible conectar al servidor');
         }
       } else {
-        setErrorMessage('No fue posible conectar al servidor'); // Error de red u otro problema
+        setErrorMessage('No fue posible conectar al servidor');
       }
       console.error('Error al iniciar sesión', error.response ? error.response.data : error);
     }
@@ -61,7 +63,7 @@ const LoginForm = () => {
             type="text" 
             value={username} 
             onChange={(e) => setUsername(e.target.value)} 
-            autoComplete="username" // Agrega el atributo autocomplete
+            autoComplete="name"
           />
         </div>
         <div>
@@ -70,7 +72,7 @@ const LoginForm = () => {
             type="password" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
-            autoComplete="current-password" // Agrega el atributo autocomplete
+            autoComplete="current-password"
           />
         </div> 
         <button type="submit">Iniciar Sesión</button>

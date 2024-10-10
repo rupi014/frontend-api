@@ -17,6 +17,7 @@ const Staff = () => {
   const [staffToEdit, setStaffToEdit] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
+  // Obtener los miembros del staff
   useEffect(() => {
     const fetchStaff = async () => {
       try {
@@ -30,6 +31,7 @@ const Staff = () => {
     fetchStaff();
   }, []);
 
+  // Eliminar un miembro del staff
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este miembro del staff?");
     if (!confirmDelete) return;
@@ -42,6 +44,7 @@ const Staff = () => {
     }
   };
 
+  // Añadir un nuevo miembro del staff
   const handleAddStaff = async () => {
     try {
       let imageUrl = '';
@@ -61,6 +64,7 @@ const Staff = () => {
     }
   };
 
+  // Editar un miembro del staff
   const handleEditStaff = (member) => {
     if (staffToEdit && staffToEdit.id === member.id) {
       // Si ya estamos editando este miembro, salir del modo edición
@@ -73,6 +77,7 @@ const Staff = () => {
     }
   };
 
+  // Actualizar un miembro del staff
   const handleUpdateStaff = async () => {
     try {
       let imageUrl = newStaff.image;

@@ -1,5 +1,7 @@
 const webpack = require('webpack');
 
+// Configuracion de Webpack para compatibilidad con Node.js en el navegador
+
 module.exports = function override(config, env) {
   config.resolve.fallback = {
     ...config.resolve.fallback,
@@ -13,14 +15,14 @@ module.exports = function override(config, env) {
     "buffer": require.resolve("buffer/"),
     "vm": require.resolve("vm-browserify"),
     "util": require.resolve("util/"),
-    "process": require.resolve("process/browser.js"), // Mantener .js
-    "fs": false // fs no tiene un polyfill en navegadores
+    "process": require.resolve("process/browser.js"), 
+    "fs": false 
   };
 
   config.plugins = (config.plugins || []).concat([
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
-      process: 'process/browser.js', // Mantener .js
+      process: 'process/browser.js',
     }),
   ]);
 
