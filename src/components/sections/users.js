@@ -4,6 +4,7 @@ import './users_style.scss';
 
 const Users = () => {
   const [userId, setUserId] = useState('');
+  const [userEmail, setUserEmail] = useState(''); // Nuevo estado para el email
   const [userData, setUserData] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [userToEdit, setUserToEdit] = useState(null);
@@ -23,17 +24,38 @@ const Users = () => {
   const handleSearch = async () => {
     try {
       const token = getAuthToken();
-      const response = await axios.get(`https://vikingsdb.up.railway.app/users/${userId}`, {
+      let query = '';
+
+      if (userId) {
+        query = `id=${userId}`;
+      } else if (userEmail) {
+        query = `email=${userEmail}`;
+      }
+
+      const response = await axios.get(`https://vikingsdb.up.railway.app/users?${query}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      if (response.data) {
-        setUserData(response.data);
-        setErrorMessage('');
+
+      console.log('API Response:', response.data);
+
+      if (response.data && response.data.length > 0) {
+        // Filtrar resultados para asegurar coincidencia exacta del ID o email
+        const filteredData = userId 
+          ? response.data.filter(user => user.id.toString() === userId) 
+          : response.data.filter(user => user.email === userEmail);
+        
+        if (filteredData.length > 0) {
+          setUserData(filteredData);
+          setErrorMessage('');
+        } else {
+          setUserData(null);
+          setErrorMessage('No se encontraron usuarios con los criterios de búsqueda proporcionados.');
+        }
       } else {
         setUserData(null);
-        setErrorMessage(`El usuario ${userId} no existe`);
+        setErrorMessage('No se encontraron usuarios con los criterios de búsqueda proporcionados.');
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -41,7 +63,7 @@ const Users = () => {
       } else {
         console.error('Error fetching user data:', error);
         setUserData(null);
-        setErrorMessage(`El usuario ${userId} no existe`);
+        setErrorMessage('No se encontraron usuarios con los criterios de búsqueda proporcionados.');
       }
     }
   };
@@ -117,6 +139,14 @@ const Users = () => {
         value={userId}
         onChange={(e) => setUserId(e.target.value)}
       />
+      <input
+        className='search-input'
+        type="text"
+        placeholder="Introduce el email del usuario"
+        value={userEmail}
+        onChange={(e) => setUserEmail(e.target.value)}
+        autoComplete='email'
+      />
       <button onClick={handleSearch}>Buscar</button>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
       {userData && (
@@ -133,23 +163,25 @@ const Users = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td data-label="ID">{userData.id}</td>
-              <td data-label="Nombre de Usuario">{userData.username}</td>
-              <td data-label="Email">{userData.email}</td>
-              <td data-label="Teléfono">{userData.telephone}</td>
-              <td data-label="Dirección">{userData.address}</td>
-              <td data-label="Rol">{userData.role}</td>
-              <td>
-                <button
-                  className={`edit-button ${userToEdit && userToEdit.id === userData.id ? 'hover' : ''}`}
-                  onClick={() => handleEditUser(userData)}
-                >
-                  {userToEdit && userToEdit.id === userData.id ? 'Cancelar' : 'Editar'}
-                </button>
-                <button className='delete-button' onClick={() => handleDeleteUser(userData.id)}>Eliminar</button>
-              </td>
-            </tr>
+            {userData.map(user => (
+              <tr key={user.id}>
+                <td data-label="ID">{user.id}</td>
+                <td data-label="Nombre de Usuario">{user.username}</td>
+                <td data-label="Email">{user.email}</td>
+                <td data-label="Teléfono">{user.telephone}</td>
+                <td data-label="Dirección">{user.address}</td>
+                <td data-label="Rol">{user.role}</td>
+                <td>
+                  <button
+                    className={`edit-button ${userToEdit && userToEdit.id === user.id ? 'hover' : ''}`}
+                    onClick={() => handleEditUser(user)}
+                  >
+                    {userToEdit && userToEdit.id === user.id ? 'Cancelar' : 'Editar'}
+                  </button>
+                  <button className='delete-button' onClick={() => handleDeleteUser(user.id)}>Eliminar</button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       )}
